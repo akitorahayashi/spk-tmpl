@@ -1,0 +1,12 @@
+{
+  "images": [
+    {
+      "filename": "fighter_jet.png",
+      "idiom": "universal"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

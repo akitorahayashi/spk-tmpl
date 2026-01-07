@@ -15,7 +15,7 @@ DEBUG_APP_PATH := TEST_DERIVED_DATA_PATH + "/Debug/Build/Products/Debug-iphonesi
 RELEASE_APP_PATH := TEST_DERIVED_DATA_PATH + "/Release/Build/Products/Release-iphonesimulator/TemplateApp.app"
 
 # --- SWIFT PACKAGE OPTIONS ---
-SWIFTPM_ROOT := env("SWIFTPM_ROOT", HOME_DIR + "/.cache/swiftpm/tca-tmpl")
+SWIFTPM_ROOT := env("SWIFTPM_ROOT", HOME_DIR + "/.cache/swiftpm/spk-tmpl")
 SWIFTPM_DEP_CACHE := SWIFTPM_ROOT + "/dependencies"
 SWIFTPM_ARTIFACT_ROOT := SWIFTPM_ROOT + "/artifacts"
 
@@ -187,10 +187,10 @@ test:
     @just package-test
     @just fastlane::test-all
 
-# Run Swift package tests
+# Run Swift package tests (domain tests only; UI requires xcodebuild on iOS simulator)
 package-test:
     @echo "Running Swift package tests..."
-    @swift test --package-path Packages
+    @swift test --package-path Packages --filter "GameFeatureDomainTests|AppFeatureDomainTests"
     @echo "✅ Package tests complete."
 
 # Run a specific package test target

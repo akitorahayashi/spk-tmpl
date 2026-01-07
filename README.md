@@ -1,20 +1,21 @@
 ## Overview
 
-This is an iOS app template built with SwiftUI and The Composable Architecture (TCA). The architecture follows a package-modularized structure where feature logic lives in a local Swift package.
+This is an iOS SpriteKit game template built with SwiftUI and The Composable Architecture (TCA). The app features a TCA-managed game lifecycle (home → playing → ended → home) with SpriteKit rendering the gameplay experience.
 
 ## Architecture
 
-### TCA-First Design
-- **Reducers** manage all business logic using `@Reducer` macro
+### TCA + SpriteKit Design
+- **Reducers** manage game phase transitions using `@Reducer` macro
 - **Views** bind to stores via `StoreOf<Feature>` and `@Bindable`
+- **SpriteKit** renders gameplay via `UIViewRepresentable` hosting `SKView`
 - **Dependencies** use the pointfree `Dependencies` library for injection
-- **Navigation** follows scope-driven composition patterns
+- **Navigation** follows store-driven phase transitions
 
 ### Package Structure
 - `App/`: Application shell with resources and dependency bootstrap
 - `Packages/`: Local Swift package containing feature modules
-  - `AppFeature/`: Root feature composing child features
-  - `CounterFeature/`: Sample counter feature demonstrating TCA patterns
+  - `AppFeature/`: Root feature composing the game feature
+  - `GameFeature/`: Game lifecycle management and SpriteKit scene
 - `Tests/Unit/`: Unit tests for app-level code
 - `Tests/Intg/`: Integration tests with dependency overrides
 - `Tests/UI/`: Black-box UI tests
@@ -22,23 +23,35 @@ This is an iOS app template built with SwiftUI and The Composable Architecture (
 ### Module Conventions
 Each feature follows a Domain/UI split:
 - `*Domain`: Reducer, state, actions, and dependencies (no SwiftUI imports)
-- `*UI`: SwiftUI views that bind to stores
+- `*UI`: SwiftUI views and SpriteKit scenes that bind to stores
+
+## Game Feature
+
+### Phase State Machine
+The game operates on a simple phase-based state machine:
+- **home**: Title screen with "Tap to Start" prompt
+- **playing**: Active SpriteKit gameplay with kill tracking
+- **ended**: Result screen (won/lost) with return prompt
+
+### SpriteKit Gameplay
+The game scene implements:
+- Player movement via touch drag (X-axis following)
+- Automatic firing for player and enemy (periodic bullets)
+- Collision detection (player bullet ↔ enemy, enemy bullet ↔ player)
+- Win condition: 10 kills
+- Loss condition: Single hit
+
+### SpriteKit Hosting
+SpriteKit is hosted via `UIViewRepresentable` wrapping `SKView`:
+- Scene creation triggered by SwiftUI geometry
+- Debug overlays (FPS/node count) in Debug builds
+- Callbacks bridge game events to TCA actions
 
 ## Customization Steps
 
 When starting a new project from this template, follow these steps to set project-specific values.
 
-### 1. Change Project Name and Directory
-
-In the project root directory, change the template placeholder names to your new project name. For example, if your new project name is `NewApp`:
-
-1. `App` → `App` (no change needed)
-2. `Tests/Unit` → `Tests/Unit` (no change needed)
-3. `Tests/Intg` → `Tests/Intg` (no change needed)
-4. `Tests/UI` → `Tests/UI` (no change needed)
-5. `Packages` → `Packages` (no change needed)
-
-### 2. Configure Environment Variables
+### 1. Configure Environment Variables
 
 Copy `.env.example` to `.env` and update the values as needed.
 
@@ -51,7 +64,7 @@ This project uses separate simulators for development and testing:
 
 To find your simulator UDID, run `xcrun simctl list devices` and copy the UUID of the desired simulator.
 
-### 3. Update Configuration Files
+### 2. Update Configuration Files
 
 #### project.envsubst.yml
 
