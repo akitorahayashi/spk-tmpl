@@ -1,6 +1,6 @@
 #if canImport(UIKit)
   import ComposableArchitecture
-  import GameFeatureDomain
+  import GameFeatureCore
   import SwiftUI
 
   /// The root view that switches between game phases based on store state.

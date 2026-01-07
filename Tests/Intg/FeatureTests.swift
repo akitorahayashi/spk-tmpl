@@ -1,6 +1,6 @@
-import AppFeatureDomain
+import AppFeatureCore
 import ComposableArchitecture
-import GameFeatureDomain
+import GameFeatureCore
 import XCTest
 
 @testable import TemplateApp

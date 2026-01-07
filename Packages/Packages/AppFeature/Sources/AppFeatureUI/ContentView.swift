@@ -1,5 +1,5 @@
 #if canImport(UIKit)
-  import AppFeatureDomain
+  import AppFeatureCore
   import ComposableArchitecture
   import GameFeatureUI
   import SwiftUI

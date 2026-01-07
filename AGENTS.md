@@ -10,16 +10,16 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 │   └── Packages/
 │       ├── AppFeature/        # Root feature composing the game feature
 │       │   ├── Sources/
-│       │   │   ├── AppFeatureDomain/   # Reducer, state, actions
+│       │   │   ├── AppFeatureCore/   # Reducer, state, actions
 │       │   │   └── AppFeatureUI/       # SwiftUI views
 │       │   └── Tests/
-│       │       └── AppFeatureDomainTests/
+│       │       └── AppFeatureCoreTests/
 │       └── GameFeature/       # Game lifecycle and SpriteKit scene
 │           ├── Sources/
-│           │   ├── GameFeatureDomain/  # Phase state machine reducer
+│           │   ├── GameFeatureCore/  # Phase state machine reducer
 │           │   └── GameFeatureUI/      # SpriteKit scene and hosting views
 │           └── Tests/
-│               └── GameFeatureDomainTests/
+│               └── GameFeatureCoreTests/
 ├── Tests/
 │   ├── Unit/                  # Unit tests for app-level code
 │   ├── Intg/                  # Integration tests with dependency overrides
@@ -40,7 +40,7 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
     - **Dependencies**: Managed via pointfree Dependencies library (@Dependency, DependencyKey)
     - **Navigation**: Store-driven phase transitions (home/playing/ended)
 - **Module Structure**:
-    - *Domain targets: Reducer, state, actions, dependencies (pure Swift, no SwiftUI)
+    - *Core targets: Reducer, state, actions, dependencies (pure Swift, no SwiftUI)
     - *UI targets: SwiftUI views and SpriteKit scenes that scope stores and render state
 - **Game Phase State Machine**:
     - home: Title screen waiting for user input
@@ -76,7 +76,7 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 
 ### Workflow & Testing
 - Run just check before handoff (formats and lints)
-- Package domain tests validate reducer logic using TestStore
+- Package core tests validate reducer logic using TestStore
 - Integration tests verify feature composition with mock dependencies
 - If in a sandbox environment, submit changes without forcing test runs
 
@@ -99,9 +99,9 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 
 ### Platform-Specific Code & Package Tests
 - **UI targets contain iOS-only code** (UIKit, UIViewRepresentable, UITouch)
-- **Test targets depend only on Domain targets**, never on UI targets
+- **Test targets depend only on Core targets**, never on UI targets
 - **Files using iOS-only APIs are wrapped in `#if canImport(UIKit)`** to compile as empty modules on macOS
-- `swift test --filter` runs Domain tests on macOS without building iOS-specific UI code
+- `swift test --filter` runs Core tests on macOS without building iOS-specific UI code
 - This pattern enables `just package-test` to validate reducers on any platform
 
 ### Follow Embedded User Instructions

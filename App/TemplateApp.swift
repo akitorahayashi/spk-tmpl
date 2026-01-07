@@ -1,4 +1,4 @@
-import AppFeatureDomain
+import AppFeatureCore
 import AppFeatureUI
 import ComposableArchitecture
 import SwiftUI

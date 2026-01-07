@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import Dependencies
 import Foundation
-import GameFeatureDomain
+import GameFeatureCore
 
 /// The root feature that composes the game feature.
 @Reducer

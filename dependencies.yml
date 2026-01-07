@@ -1,11 +1,11 @@
 # App Feature
 - package: Packages
-  product: AppFeatureDomain
+  product: AppFeatureCore
 - package: Packages
   product: AppFeatureUI
 
 # Game Feature
 - package: Packages
-  product: GameFeatureDomain
+  product: GameFeatureCore
 - package: Packages
   product: GameFeatureUI
