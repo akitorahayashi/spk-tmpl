@@ -4,8 +4,8 @@
 - package: Packages
   product: AppFeatureUI
 
-# Counter Feature
+# Game Feature
 - package: Packages
-  product: CounterFeatureDomain
+  product: GameFeatureDomain
 - package: Packages
-  product: CounterFeatureUI
+  product: GameFeatureUI

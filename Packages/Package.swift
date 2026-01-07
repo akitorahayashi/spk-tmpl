@@ -9,9 +9,9 @@ let package = Package(
     .library(name: "AppFeatureDomain", targets: ["AppFeatureDomain"]),
     .library(name: "AppFeatureUI", targets: ["AppFeatureUI"]),
 
-    // Counter Feature
-    .library(name: "CounterFeatureDomain", targets: ["CounterFeatureDomain"]),
-    .library(name: "CounterFeatureUI", targets: ["CounterFeatureUI"]),
+    // Game Feature
+    .library(name: "GameFeatureDomain", targets: ["GameFeatureDomain"]),
+    .library(name: "GameFeatureUI", targets: ["GameFeatureUI"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.23.1"),
@@ -27,7 +27,7 @@ let package = Package(
     .target(
       name: "AppFeatureDomain",
       dependencies: [
-        "CounterFeatureDomain",
+        "GameFeatureDomain",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
@@ -45,7 +45,7 @@ let package = Package(
       name: "AppFeatureUI",
       dependencies: [
         "AppFeatureDomain",
-        "CounterFeatureUI",
+        "GameFeatureUI",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
       path: "Packages/AppFeature/Sources/AppFeatureUI"
@@ -60,33 +60,33 @@ let package = Package(
       path: "Packages/AppFeature/Tests/AppFeatureDomainTests"
     ),
 
-    // MARK: - Counter Feature
+    // MARK: - Game Feature
 
     .target(
-      name: "CounterFeatureDomain",
+      name: "GameFeatureDomain",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
       ],
-      path: "Packages/CounterFeature/Sources/CounterFeatureDomain"
+      path: "Packages/GameFeature/Sources/GameFeatureDomain"
     ),
     .target(
-      name: "CounterFeatureUI",
+      name: "GameFeatureUI",
       dependencies: [
-        "CounterFeatureDomain",
+        "GameFeatureDomain",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "Packages/CounterFeature/Sources/CounterFeatureUI"
+      path: "Packages/GameFeature/Sources/GameFeatureUI"
     ),
     .testTarget(
-      name: "CounterFeatureDomainTests",
+      name: "GameFeatureDomainTests",
       dependencies: [
-        "CounterFeatureDomain",
+        "GameFeatureDomain",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
       ],
-      path: "Packages/CounterFeature/Tests/CounterFeatureDomainTests"
+      path: "Packages/GameFeature/Tests/GameFeatureDomainTests"
     ),
   ]
 )
