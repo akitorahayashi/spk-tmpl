@@ -22,16 +22,16 @@
 
     public var body: some View {
       GeometryReader { geometry in
-        if let scene {
-          GameSceneView(scene: scene)
-            .ignoresSafeArea()
-        } else {
-          Color.black
-            .ignoresSafeArea()
-            .onAppear {
+        GameSceneView(scene: self.scene ?? GameScene.create(size: geometry.size))
+          .ignoresSafeArea()
+          .onAppear {
+            if self.scene == nil {
               self.createScene(size: geometry.size)
             }
-        }
+          }
+          .onChange(of: geometry.size) { _, newSize in
+            self.scene?.size = newSize
+          }
       }
     }
 

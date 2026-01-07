@@ -26,8 +26,8 @@ final class TemplateAppUITests: XCTestCase {
     let startLabel = app.staticTexts["Tap to Start"]
     XCTAssertTrue(startLabel.waitForExistence(timeout: 3))
 
-    // Tap to start game
-    app.tap()
+    // Tap the "Tap to Start" label to start game
+    startLabel.tap()
 
     // Verify home screen text disappears (game is now active)
     XCTAssertTrue(startLabel.waitForNonExistence(timeout: 3))

@@ -11,6 +11,14 @@
   /// - Win condition (10 kills) and loss condition (player hit)
   @MainActor
   public final class GameScene: SKScene, @preconcurrency SKPhysicsContactDelegate {
+    // MARK: - Constants
+
+    private enum NodeName {
+      static let background = "background"
+      static let playerBullet = "playerBullet"
+      static let enemyBullet = "enemyBullet"
+    }
+
     // MARK: - Callbacks
 
     /// Called when the player kills an enemy.
@@ -52,10 +60,33 @@
       self.startFiring()
     }
 
+    override public func didChangeSize(_ oldSize: CGSize) {
+      super.didChangeSize(oldSize)
+      guard size != oldSize, size.width > 0, size.height > 0 else { return }
+
+      // Re-layout background
+      if let bg = childNode(withName: NodeName.background) as? SKSpriteNode {
+        bg.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        bg.size = size
+      }
+
+      // Re-position player (keep relative x position)
+      if oldSize.width > 0 {
+        let relativeX = self.player.position.x / oldSize.width
+        self.player.position = CGPoint(x: size.width * relativeX, y: size.height * 0.15)
+      } else {
+        self.player.position = CGPoint(x: size.width / 2, y: size.height * 0.15)
+      }
+
+      // Re-position enemy
+      self.enemy.position = CGPoint(x: size.width / 2, y: size.height * 0.82)
+    }
+
     // MARK: - Setup
 
     private func setupBackground() {
       let bg = SKSpriteNode(imageNamed: "universe_background")
+      bg.name = NodeName.background
       bg.position = CGPoint(x: size.width / 2, y: size.height / 2)
       bg.zPosition = -10
       bg.size = size
@@ -65,7 +96,7 @@
     private func setupPlayer() {
       self.player.setScale(0.25)
 
-      let radius = max(player.size.width, self.player.size.height) * 0.25
+      let radius = max(player.size.width, self.player.size.height) * self.player.xScale / 2
       self.player.physicsBody = SKPhysicsBody(circleOfRadius: radius)
       self.player.physicsBody?.affectedByGravity = false
       self.player.physicsBody?.isDynamic = true
@@ -79,20 +110,25 @@
     }
 
     private func setupEnemy() {
-      self.enemy = SKSpriteNode(imageNamed: "enemy")
-      self.enemy.setScale(0.25)
-      self.enemy.position = CGPoint(x: size.width / 2, y: size.height * 0.82)
-      self.enemy.zPosition = 10
-
-      let radius = max(enemy.size.width, self.enemy.size.height) * 0.25
-      self.enemy.physicsBody = SKPhysicsBody(circleOfRadius: radius)
-      self.enemy.physicsBody?.affectedByGravity = false
-      self.enemy.physicsBody?.isDynamic = true
-      self.enemy.physicsBody?.categoryBitMask = PhysicsCategory.enemy
-      self.enemy.physicsBody?.collisionBitMask = 0
-      self.enemy.physicsBody?.contactTestBitMask = PhysicsCategory.playerBullet
-
+      self.enemy = self.createEnemyNode()
       addChild(self.enemy)
+    }
+
+    private func createEnemyNode() -> SKSpriteNode {
+      let node = SKSpriteNode(imageNamed: "enemy")
+      node.setScale(0.25)
+      node.position = CGPoint(x: size.width / 2, y: size.height * 0.82)
+      node.zPosition = 10
+
+      let radius = max(node.size.width, node.size.height) * node.xScale / 2
+      node.physicsBody = SKPhysicsBody(circleOfRadius: radius)
+      node.physicsBody?.affectedByGravity = false
+      node.physicsBody?.isDynamic = true
+      node.physicsBody?.categoryBitMask = PhysicsCategory.enemy
+      node.physicsBody?.collisionBitMask = 0
+      node.physicsBody?.contactTestBitMask = PhysicsCategory.playerBullet
+
+      return node
     }
 
     private func startFiring() {
@@ -115,6 +151,7 @@
       guard !self.isEnded else { return }
 
       let bullet = SKSpriteNode(imageNamed: "bullet_yellow")
+      bullet.name = NodeName.playerBullet
       bullet.setScale(0.125)
       bullet.zPosition = 20
       bullet.position = CGPoint(
@@ -122,7 +159,7 @@
         y: self.player.position.y + self.player.size.height * 0.5
       )
 
-      let radius = max(bullet.size.width, bullet.size.height) * 0.3
+      let radius = max(bullet.size.width, bullet.size.height) * bullet.xScale / 2
       bullet.physicsBody = SKPhysicsBody(circleOfRadius: radius)
       bullet.physicsBody?.affectedByGravity = false
       bullet.physicsBody?.isDynamic = false
@@ -141,6 +178,7 @@
       guard !self.isEnded else { return }
 
       let bullet = SKSpriteNode(imageNamed: "bullet_red")
+      bullet.name = NodeName.enemyBullet
       bullet.setScale(0.125)
       bullet.zPosition = 20
       bullet.position = CGPoint(
@@ -148,7 +186,7 @@
         y: self.enemy.position.y - self.enemy.size.height * 0.5
       )
 
-      let radius = max(bullet.size.width, bullet.size.height) * 0.3
+      let radius = max(bullet.size.width, bullet.size.height) * bullet.xScale / 2
       bullet.physicsBody = SKPhysicsBody(circleOfRadius: radius)
       bullet.physicsBody?.affectedByGravity = false
       bullet.physicsBody?.isDynamic = false
@@ -204,19 +242,7 @@
     // MARK: - Game State
 
     private func respawnEnemy() {
-      self.enemy = SKSpriteNode(imageNamed: "enemy")
-      self.enemy.setScale(0.25)
-      self.enemy.position = CGPoint(x: size.width / 2, y: size.height * 0.82)
-      self.enemy.zPosition = 10
-
-      let radius = max(enemy.size.width, self.enemy.size.height) * 0.25
-      self.enemy.physicsBody = SKPhysicsBody(circleOfRadius: radius)
-      self.enemy.physicsBody?.affectedByGravity = false
-      self.enemy.physicsBody?.isDynamic = true
-      self.enemy.physicsBody?.categoryBitMask = PhysicsCategory.enemy
-      self.enemy.physicsBody?.collisionBitMask = 0
-      self.enemy.physicsBody?.contactTestBitMask = PhysicsCategory.playerBullet
-
+      self.enemy = self.createEnemyNode()
       addChild(self.enemy)
     }
 
@@ -225,16 +251,12 @@
       removeAction(forKey: "playerFire")
       removeAction(forKey: "enemyFire")
 
-      // Remove all bullets
-      enumerateChildNodes(withName: "//") { node, _ in
-        if let body = node.physicsBody {
-          if
-            body.categoryBitMask == PhysicsCategory.playerBullet ||
-            body.categoryBitMask == PhysicsCategory.enemyBullet
-          {
-            node.removeFromParent()
-          }
-        }
+      // Remove all bullets by name for efficiency
+      enumerateChildNodes(withName: NodeName.playerBullet) { node, _ in
+        node.removeFromParent()
+      }
+      enumerateChildNodes(withName: NodeName.enemyBullet) { node, _ in
+        node.removeFromParent()
       }
     }
 

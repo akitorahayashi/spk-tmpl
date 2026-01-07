@@ -2,6 +2,8 @@ import SwiftUI
 
 /// The home screen view displaying the game title and start prompt.
 public struct HomeView: View {
+  @State private var pulseOpacity: Double = 1.0
+
   let onStart: () -> Void
 
   public init(onStart: @escaping () -> Void) {
@@ -36,8 +38,6 @@ public struct HomeView: View {
       self.pulseOpacity = 0.3
     }
   }
-
-  @State private var pulseOpacity: Double = 1.0
 }
 
 #if DEBUG
