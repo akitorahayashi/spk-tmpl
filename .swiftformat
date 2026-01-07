@@ -1,0 +1,79 @@
+#===================================================================
+# Swift Format Rules
+#===================================================================
+
+#-------------------------------------------------------------------
+# General Configuration
+#-------------------------------------------------------------------
+# Swift version
+--swiftversion 6.0
+
+# Excluded directories (build artifacts, dependencies, etc.)
+--exclude .build
+--exclude **/.build
+--exclude **/.swiftpm
+--exclude DerivedData
+--exclude fastlane
+--exclude references
+--exclude reference
+--exclude .git
+--exclude build
+--exclude xcbuild
+
+#-------------------------------------------------------------------
+# Indentation & Spacing
+#-------------------------------------------------------------------
+# Indentation settings
+--indent 2                       # Set indentation width to 4 spaces
+--indentcase true               # Indent case statements relative to switch
+--maxwidth 120                   # Maximum line width is 120 characters
+--trimwhitespace always          # Remove leading and trailing whitespace
+--commas always                  # Add spaces after commas
+--linebreaks lf                  # Use LF (\n) as the line break character (do not use CRLF)
+
+#-------------------------------------------------------------------
+# Braces & Structure
+#-------------------------------------------------------------------
+# Brace style
+--allman false                   # Use Swift standard brace style: place opening brace on the same line as the condition
+                                 # Example: if (condition) {
+                                 #            statements
+                                 #          }
+                                 
+--closingparen balanced          # For multi-line function calls, align closing parenthesis at the same level as the start
+                                 # Example: someFunction(
+                                 #             parameter1: value1,
+                                 #             parameter2: value2
+                                 #          )  // Closing parenthesis at the same indentation level as the call start
+
+# Semicolons
+--semicolons never               # Do not use semicolons
+
+#-------------------------------------------------------------------
+# Wrapping & Collections
+#-------------------------------------------------------------------
+# Wrapping for long argument lists and collections
+--wraparguments before-first     # When wrapping argument lists, wrap before the first argument (after the opening parenthesis)
+                                 # Example: someFunction(  // Wrap after the parenthesis
+                                 #             arg1: value1,
+                                 #             arg2: value2,
+                                 #             arg3: value3
+                                 #          )
+                                 # This makes long argument lists easy to identify and separates them from the function name for readability
+
+--wrapcollections before-first   # When wrapping collection literals like arrays or dictionaries, wrap before the first element
+                                 # Example: let array = [  // Wrap after the bracket
+                                 #             item1,
+                                 #             item2,
+                                 #             item3
+                                 #          ]
+                                 #
+                                 # Each element aligns at the same indentation level, keeping it visually organized and readable
+#-------------------------------------------------------------------
+# Imports & Modifiers
+#-------------------------------------------------------------------
+--importgrouping alphabetical      # Sort import statements alphabetically
+--modifierorder acl                # Reorder modifiers in ACL order
+--self insert                      # Explicitly insert self
+--ranges spaced                    # Add spaces around range operators
+--wrapconditions before-first      # For multi-condition if/guard statements, wrap before the first condition

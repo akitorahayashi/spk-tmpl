@@ -1,0 +1,7 @@
+# Fastlane files
+README.md
+report.xml
+
+# Fastlane build artifacts and logs
+build/
+logs/

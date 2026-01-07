@@ -1,0 +1,152 @@
+name: TemplateApp
+
+options:
+  deploymentTarget:
+    iOS: 17.0
+  createIntermediateGroups: true
+
+configs:
+  Debug: debug
+  Release: release
+
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    SWIFT_STRICT_CONCURRENCY: "complete"
+    MARKETING_VERSION: 1.0
+    CURRENT_PROJECT_VERSION: 1
+    ENABLE_USER_SCRIPT_SANDBOXING: "NO"
+    SKIP_MACRO_VALIDATION: "YES"
+    DEVELOPMENT_TEAM: $TEAM_ID
+  configs:
+    Debug:
+      SWIFT_OPTIMIZATION_LEVEL: "-Onone"
+    Release:
+      SWIFT_OPTIMIZATION_LEVEL: "-O"
+
+packages:
+  Packages:
+    path: Packages
+
+targets:
+  TemplateApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+    resources:
+      - path: App/Resources
+    dependencies:
+      # __DEPENDENCIES__
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.TemplateApp
+        GENERATE_INFOPLIST_FILE: "YES"
+      configs:
+        Debug:
+          ENABLE_TESTABILITY: "YES"
+        Release: {}
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleName: $(PRODUCT_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleInfoDictionaryVersion: "6.0"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleDisplayName: TemplateApp
+        UILaunchScreen: {}
+
+  TemplateAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests/Unit
+    dependencies:
+      - target: TemplateApp
+      # __DEPENDENCIES__
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.TemplateAppTests
+        GENERATE_INFOPLIST_FILE: "YES"
+        SWIFT_ENABLE_EXPLICIT_MODULES: "NO"
+    info:
+      path: Tests/Unit/Info.plist
+
+  TemplateAppIntgTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests/Intg
+    dependencies:
+      - target: TemplateApp
+      # __DEPENDENCIES__
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.TemplateAppIntgTests
+        GENERATE_INFOPLIST_FILE: "YES"
+        SWIFT_ENABLE_EXPLICIT_MODULES: "NO"
+    info:
+      path: Tests/Intg/Info.plist
+
+  TemplateAppUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - Tests/UI
+    dependencies:
+      - target: TemplateApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.TemplateAppUITests
+        GENERATE_INFOPLIST_FILE: "YES"
+        SWIFT_ENABLE_EXPLICIT_MODULES: "NO"
+    info:
+      path: Tests/UI/Info.plist
+
+schemes:
+  TemplateApp:
+    build:
+      targets:
+        TemplateApp: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - TemplateAppTests
+        - TemplateAppUITests
+        - TemplateAppIntgTests
+    archive:
+      config: Release
+
+  TemplateAppTests:
+    build:
+      targets:
+        TemplateAppTests: all
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - TemplateAppTests
+
+  TemplateAppIntgTests:
+    build:
+      targets:
+        TemplateAppIntgTests: all
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - TemplateAppIntgTests
+
+  TemplateAppUITests:
+    build:
+      targets:
+        TemplateAppUITests: all
+    test:
+      config: Debug
+      gatherCoverageData: false
+      targets:
+        - TemplateAppUITests

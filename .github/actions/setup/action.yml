@@ -1,0 +1,59 @@
+name: Setup
+description: Common setup steps for iOS project workflows
+
+inputs:
+  setup_xcode:
+    description: 'Whether to setup Xcode'
+    required: true
+  generate_project:
+    description: 'Whether to generate Xcode project'
+    required: true
+  setup_ruby:
+    description: 'Whether to setup Ruby'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Xcode
+      if: inputs.setup_xcode == 'true'
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '26.0'
+
+    - name: Cache Mint packages
+      uses: actions/cache@v4
+      id: cache-mint-packages
+      with:
+        path: ${{ github.workspace }}/.mint
+        key: ${{ runner.os }}-mint-${{ hashFiles('**/Mintfile') }}
+        restore-keys: |
+          ${{ runner.os }}-mint-
+
+    - name: Cache SwiftPM dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/Library/Developer/Xcode/DerivedData/*/SourcePackages
+          ${{ github.workspace }}/.cache/swiftpm/tca-tmpl/dependencies
+        key: ${{ runner.os }}-swiftpm-${{ hashFiles('TemplatePackages/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-swiftpm-
+
+    - name: Install Mint
+      run: brew install mint
+      shell: bash
+
+    - name: Install just
+      uses: extractions/setup-just@v2
+
+    - name: Generate Xcode Project
+      if: inputs.generate_project == 'true'
+      run: just gen-pj
+      shell: bash
+
+    - name: Setup Ruby
+      if: inputs.setup_ruby == 'true'
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true

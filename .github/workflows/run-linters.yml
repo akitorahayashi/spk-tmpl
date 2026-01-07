@@ -1,0 +1,27 @@
+name: Run Linters
+
+on:
+  workflow_call:
+
+jobs:
+  run-linters:
+    runs-on: macos-15
+    permissions:
+      contents: read
+    timeout-minutes: 15
+    env:
+      MINT_PATH: ${{ github.workspace }}/.mint
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+
+    - name: Setup environment
+      uses: ./.github/actions/setup
+      with:
+        setup_xcode: false
+        generate_project: false
+        setup_ruby: false
+
+    - name: Run Linters
+      run: just check

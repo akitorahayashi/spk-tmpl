@@ -1,0 +1,27 @@
+# Fastfile - Orchestrator
+# This file serves as the entry point for all Fastlane lanes.
+# Lane implementations are modularized in the lanes/ directory.
+
+default_platform(:ios)
+
+require "fileutils"
+require_relative "config"
+
+before_all do
+  ENV["FL_BUILDLOG_PATH"] = LOGS_PATH
+  ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "20"
+
+  [
+    BUILD_PATH,
+    LOGS_PATH,
+    TEST_LOGS_PATH,
+    BUILD_LOGS_PATH,
+    TEST_RESULTS_PATH,
+  ].each { |path| FileUtils.mkdir_p(path) }
+end
+
+platform :ios do
+  import 'lanes/build.rb'
+  import 'lanes/sign.rb'
+  import 'lanes/test.rb'
+end

@@ -1,0 +1,112 @@
+name: Test Packages
+
+on:
+  workflow_call:
+
+env:
+  SWIFTPM_ROOT: ${{ github.workspace }}/.cache/swiftpm/tca-tmpl
+
+jobs:
+  # ------------------------------------------------------------------
+  # 1. Matrix Generation Job
+  # Parse Package.swift and output all test target names as a JSON list
+  # ------------------------------------------------------------------
+  generate-matrix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Extract Test Targets
+        id: set-matrix
+        working-directory: Packages
+        run: |
+          # Output definition info as JSON with swift package dump-package
+          # Use jq to extract only targets with type == "test"
+          TARGETS_JSON=$(swift package dump-package | jq -c '{"target": [.targets[] | select(.type == "test") | .name]}')
+          
+          echo "Found test targets: $TARGETS_JSON"
+          echo "matrix=$TARGETS_JSON" >> "$GITHUB_OUTPUT"
+
+  # ------------------------------------------------------------------
+  # 2. Build Job (Dependencies + Build)
+  # Resolves dependencies and builds all test targets once.
+  # ------------------------------------------------------------------
+  build-packages:
+    runs-on: macos-15
+    permissions:
+      contents: read
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.0'
+
+      - name: Build All Tests
+        run: |
+          echo "🏗️ Building all test targets..."
+          mkdir -p "$SWIFTPM_ROOT/artifacts"
+          swift build --build-tests \
+            --package-path Packages \
+            --scratch-path "$SWIFTPM_ROOT/artifacts/Packages"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiftpm-build
+          path: |
+            ${{ env.SWIFTPM_ROOT }}/artifacts
+          retention-days: 1
+
+  # ------------------------------------------------------------------
+  # 3. Test Execution Job (Parallel)
+  # Skips build and runs tests using artifacts from the build job.
+  # ------------------------------------------------------------------
+  test-package:
+    needs: [generate-matrix, build-packages]
+    runs-on: macos-15
+    permissions:
+      contents: read
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.0'
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: swiftpm-build
+          path: ${{ env.SWIFTPM_ROOT }}/artifacts
+
+      - name: Run Test Target (${{ matrix.target }})
+        run: |
+          echo "🧪 Running tests for ${{ matrix.target }}..."
+          swift test \
+            --package-path Packages \
+            --filter "${{ matrix.target }}" \
+            --skip-build \
+            --scratch-path "$SWIFTPM_ROOT/artifacts/Packages"

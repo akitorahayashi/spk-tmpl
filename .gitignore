@@ -1,0 +1,39 @@
+xcuserdata/
+*.xcodeproj/
+
+## Build related
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+build/
+
+## Objective-C/Swift specific files
+*.hmap
+
+## Packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+Package.resolved
+.swiftpm/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Environment variables and secrets
+*.env
+*.pem
+*.p12
+*.cer
+*.mobileprovision
+/.cursor/
+project.yml
+
+.tmp/
+reference/*

@@ -1,0 +1,102 @@
+#===================================================================
+# SwiftLint Configuration
+# See https://realm.github.io/SwiftLint/rule-directory.html for rule details
+#===================================================================
+
+#-------------------------------------------------------------------
+# Project-Specific Placeholders
+#-------------------------------------------------------------------
+# Replace the placeholders with values that match your project.
+
+# Paths to include in linting
+included:
+  - App/**/*.swift
+  - Tests/**/*.swift
+
+#-------------------------------------------------------------------
+# Analysis Targets
+#-------------------------------------------------------------------
+excluded:
+  - .git
+  - .build
+  - "**/.build"
+  - "**/.swiftpm"
+  - DerivedData
+  - .github
+  - Carthage
+  - build
+  - xcbuild
+  - references
+  - reference
+
+#-------------------------------------------------------------------
+# Rule Configuration
+#-------------------------------------------------------------------
+disabled_rules:
+  - trailing_whitespace # Allow trailing whitespace
+  - line_length # Line length is customized separately
+  - trailing_newline # Ignore trailing newlines
+  - trailing_comma # Disabled as it is controlled by SwiftFormat
+  - missing_docs # Disable requirement for public API documentation
+  - opening_brace # Disable brace placement rules
+  - closure_parameter_position # Disable closure parameter position rules (conflicts with SwiftFormat)
+  - multiple_closures_with_trailing_closure # Allow trailing closure syntax for multiple closures
+  - function_body_length # Disable function body length limits
+  - type_body_length # Disable type definition length limits
+  - cyclomatic_complexity # Disable cyclomatic complexity limits
+
+opt_in_rules:
+  - empty_count # Use isEmpty instead of count == 0
+  - force_unwrapping # Prohibit force unwrapping
+  - sorted_imports # Sort imports
+  - vertical_whitespace # Organize vertical whitespace
+  - explicit_init # Explicitly describe all init statements
+  - first_where # Prefer first(where:) over filter { ... }.first
+  - toggle_bool # Prefer foo.toggle() over foo = !foo
+
+analyzer_rules:
+  - unused_declaration # Detect unused declarations
+  - unused_import # Detect unused imports
+  - explicit_self # Require self. for property and method references
+  - redundant_nil_coalescing # Detect unnecessary ?? nil
+
+#-------------------------------------------------------------------
+# Individual Rule Settings
+#-------------------------------------------------------------------
+
+# File length limits
+file_length:
+  warning: 600
+  error: 1000
+
+# Nesting limits
+nesting:
+  type_level:
+    warning: 3
+  function_level:
+    warning: 5
+
+# Identifier naming rules (variable names, constant names, etc.)
+identifier_name:
+  min_length: 2
+  max_length: 50
+  excluded:
+    - id
+    - URL
+    - x
+    - y
+    - i
+    - to
+    - at
+    - of
+    - from
+    - with
+
+# Switch case alignment - align with SwiftFormat
+switch_case_alignment:
+  indented_cases: true
+
+#-------------------------------------------------------------------
+# Output Settings
+#-------------------------------------------------------------------
+reporter: "emoji"
