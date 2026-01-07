@@ -6,11 +6,11 @@ let package = Package(
   platforms: [.iOS(.v17), .macOS(.v14)],
   products: [
     // App Feature
-    .library(name: "AppFeatureDomain", targets: ["AppFeatureDomain"]),
+    .library(name: "AppFeatureCore", targets: ["AppFeatureCore"]),
     .library(name: "AppFeatureUI", targets: ["AppFeatureUI"]),
 
     // Game Feature
-    .library(name: "GameFeatureDomain", targets: ["GameFeatureDomain"]),
+    .library(name: "GameFeatureCore", targets: ["GameFeatureCore"]),
     .library(name: "GameFeatureUI", targets: ["GameFeatureUI"]),
   ],
   dependencies: [
@@ -25,9 +25,9 @@ let package = Package(
     // MARK: - App Feature
 
     .target(
-      name: "AppFeatureDomain",
+      name: "AppFeatureCore",
       dependencies: [
-        "GameFeatureDomain",
+        "GameFeatureCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
@@ -39,54 +39,54 @@ let package = Package(
         .product(name: "Perception", package: "swift-perception"),
         .product(name: "PerceptionCore", package: "swift-perception"),
       ],
-      path: "Packages/AppFeature/Sources/AppFeatureDomain"
+      path: "Packages/AppFeature/Sources/AppFeatureCore"
     ),
     .target(
       name: "AppFeatureUI",
       dependencies: [
-        "AppFeatureDomain",
+        "AppFeatureCore",
         "GameFeatureUI",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
       path: "Packages/AppFeature/Sources/AppFeatureUI"
     ),
     .testTarget(
-      name: "AppFeatureDomainTests",
+      name: "AppFeatureCoreTests",
       dependencies: [
-        "AppFeatureDomain",
+        "AppFeatureCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
       ],
-      path: "Packages/AppFeature/Tests/AppFeatureDomainTests"
+      path: "Packages/AppFeature/Tests/AppFeatureCoreTests"
     ),
 
     // MARK: - Game Feature
 
     .target(
-      name: "GameFeatureDomain",
+      name: "GameFeatureCore",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
       ],
-      path: "Packages/GameFeature/Sources/GameFeatureDomain"
+      path: "Packages/GameFeature/Sources/GameFeatureCore"
     ),
     .target(
       name: "GameFeatureUI",
       dependencies: [
-        "GameFeatureDomain",
+        "GameFeatureCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
       path: "Packages/GameFeature/Sources/GameFeatureUI"
     ),
     .testTarget(
-      name: "GameFeatureDomainTests",
+      name: "GameFeatureCoreTests",
       dependencies: [
-        "GameFeatureDomain",
+        "GameFeatureCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
       ],
-      path: "Packages/GameFeature/Tests/GameFeatureDomainTests"
+      path: "Packages/GameFeature/Tests/GameFeatureCoreTests"
     ),
   ]
 )

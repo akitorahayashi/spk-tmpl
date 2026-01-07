@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import XCTest
 
-@testable import GameFeatureDomain
+@testable import GameFeatureCore
 
 @MainActor
 final class GameFeatureTests: XCTestCase {

@@ -1,4 +1,4 @@
-import GameFeatureDomain
+import GameFeatureCore
 import SwiftUI
 
 /// The ended screen view displaying the game result and return prompt.
