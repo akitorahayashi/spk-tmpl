@@ -1,45 +1,45 @@
 ## Overview
 
-This is an iOS SpriteKit game template built with SwiftUI and The Composable Architecture (TCA). The app features a TCA-managed game lifecycle (home → playing → ended → home) with SpriteKit rendering the gameplay experience.
+This is an iOS SpriteKit game template built with SwiftUI and The Composable Architecture (TCA). The app features state-driven routing between Home and Game screens using an enum-based app state for exclusive transitions.
 
 ## Architecture
 
 ### TCA + SpriteKit Design
-- **Reducers** manage game phase transitions using `@Reducer` macro
+- **Reducers** manage feature logic using `@Reducer` macro
 - **Views** bind to stores via `StoreOf<Feature>` and `@Bindable`
 - **SpriteKit** renders gameplay via `UIViewRepresentable` hosting `SKView`
 - **Dependencies** use the pointfree `Dependencies` library for injection
-- **Navigation** follows store-driven phase transitions
+- **Navigation** follows delegate-driven transitions with enum-based app state
 
 ### Package Structure
 - `App/`: Application shell with resources and dependency bootstrap
 - `Packages/`: Local Swift package containing feature modules
-  - `AppFeature/`: Root feature composing the game feature
-  - `GameFeature/`: Game lifecycle management and SpriteKit scene
+  - `AppFeature/`: Root routing hub with enum state (home/game)
+  - `HomeFeature/`: Title screen with start trigger and delegate pattern
+  - `GameFeature/`: Pure gameplay logic with kill tracking and delegate notifications
 - `Tests/Unit/`: Unit tests for app-level code
 - `Tests/Intg/`: Integration tests with dependency overrides
 - `Tests/UI/`: Black-box UI tests
 
 ### Module Conventions
 Each feature follows a Domain/UI split:
-- `*Domain`: Reducer, state, actions, and dependencies (no SwiftUI imports)
+- `*Core`: Reducer, state, actions, and dependencies (no SwiftUI imports)
 - `*UI`: SwiftUI views and SpriteKit scenes that bind to stores
 
 ## Game Feature
 
-### Phase State Machine
-The game operates on a simple phase-based state machine:
-- **home**: Title screen with "Tap to Start" prompt
-- **playing**: Active SpriteKit gameplay with kill tracking
-- **ended**: Result screen (won/lost) with return prompt
+### Gameplay Logic
+The game operates as pure gameplay logic:
+- GameFeature is initialized in "playing" state
+- Tracks kill count and notifies parent via delegate actions on game end
+- Win condition: 10 kills
+- Loss condition: Single hit
 
 ### SpriteKit Gameplay
 The game scene implements:
 - Player movement via touch drag (X-axis following)
 - Automatic firing for player and enemy (periodic bullets)
 - Collision detection (player bullet ↔ enemy, enemy bullet ↔ player)
-- Win condition: 10 kills
-- Loss condition: Single hit
 
 ### SpriteKit Hosting
 SpriteKit is hosted via `UIViewRepresentable` wrapping `SKView`:

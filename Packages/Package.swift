@@ -9,6 +9,10 @@ let package = Package(
     .library(name: "AppFeatureCore", targets: ["AppFeatureCore"]),
     .library(name: "AppFeatureUI", targets: ["AppFeatureUI"]),
 
+    // Home Feature
+    .library(name: "HomeFeatureCore", targets: ["HomeFeatureCore"]),
+    .library(name: "HomeFeatureUI", targets: ["HomeFeatureUI"]),
+
     // Game Feature
     .library(name: "GameFeatureCore", targets: ["GameFeatureCore"]),
     .library(name: "GameFeatureUI", targets: ["GameFeatureUI"]),
@@ -27,6 +31,7 @@ let package = Package(
     .target(
       name: "AppFeatureCore",
       dependencies: [
+        "HomeFeatureCore",
         "GameFeatureCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
@@ -45,6 +50,7 @@ let package = Package(
       name: "AppFeatureUI",
       dependencies: [
         "AppFeatureCore",
+        "HomeFeatureUI",
         "GameFeatureUI",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
@@ -58,6 +64,33 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
       ],
       path: "Packages/AppFeature/Tests/AppFeatureCoreTests"
+    ),
+
+    // MARK: - Home Feature
+
+    .target(
+      name: "HomeFeatureCore",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
+      ],
+      path: "Packages/HomeFeature/Sources/HomeFeatureCore"
+    ),
+    .target(
+      name: "HomeFeatureUI",
+      dependencies: [
+        "HomeFeatureCore",
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ],
+      path: "Packages/HomeFeature/Sources/HomeFeatureUI"
+    ),
+    .testTarget(
+      name: "HomeFeatureCoreTests",
+      dependencies: [
+        "HomeFeatureCore",
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ],
+      path: "Packages/HomeFeature/Tests/HomeFeatureCoreTests"
     ),
 
     // MARK: - Game Feature

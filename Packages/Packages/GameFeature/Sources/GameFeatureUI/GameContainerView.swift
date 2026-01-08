@@ -1,4 +1,5 @@
 #if canImport(UIKit)
+  import ComposableArchitecture
   import GameFeatureCore
   import SwiftUI
 
@@ -7,17 +8,12 @@
   /// This view creates and configures the GameScene, wiring up callbacks
   /// to send TCA actions for game events.
   public struct GameContainerView: View {
-    let onPlayerKilledEnemy: () -> Void
-    let onPlayerWasHit: () -> Void
+    let store: StoreOf<GameFeature>
 
     @State private var scene: GameScene?
 
-    public init(
-      onPlayerKilledEnemy: @escaping () -> Void,
-      onPlayerWasHit: @escaping () -> Void
-    ) {
-      self.onPlayerKilledEnemy = onPlayerKilledEnemy
-      self.onPlayerWasHit = onPlayerWasHit
+    public init(store: StoreOf<GameFeature>) {
+      self.store = store
     }
 
     public var body: some View {
@@ -37,9 +33,23 @@
 
     private func createScene(size: CGSize) {
       let newScene = GameScene.create(size: size)
-      newScene.onPlayerKilledEnemy = self.onPlayerKilledEnemy
-      newScene.onPlayerWasHit = self.onPlayerWasHit
+      newScene.onPlayerKilledEnemy = {
+        self.store.send(.playerKilledEnemy)
+      }
+      newScene.onPlayerWasHit = {
+        self.store.send(.playerWasHit)
+      }
       self.scene = newScene
     }
   }
+
+  #if DEBUG
+    #Preview {
+      GameContainerView(
+        store: Store(initialState: GameFeature.State()) {
+          GameFeature()
+        }
+      )
+    }
+  #endif
 #endif
