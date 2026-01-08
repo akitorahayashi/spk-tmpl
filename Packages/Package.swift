@@ -133,7 +133,7 @@ let package = Package(
     .target(
       name: "SharedResources",
       dependencies: [],
-      path: "Packages/SharedResources/Sources/SharedResources",
+      path: "Packages/Packages/SharedResources/Sources/SharedResources",
       resources: [
         .process("Resources"),
       ]

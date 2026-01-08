@@ -20,7 +20,7 @@ jobs:
       uses: ./.github/actions/setup
       with:
         setup_xcode: false
-        generate_project: false
+        generate_code: false
         setup_ruby: false
 
     - name: Run Linters

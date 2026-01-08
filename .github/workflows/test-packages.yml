@@ -55,6 +55,11 @@ jobs:
         with:
           xcode-version: '26.0'
 
+      - name: Bootstrap Mint and generate assets
+        run: |
+          mint bootstrap
+          just gen-as
+
       - name: Build All Tests
         run: |
           echo "🏗️ Building all test targets..."

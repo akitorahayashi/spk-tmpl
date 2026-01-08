@@ -5,8 +5,8 @@ inputs:
   setup_xcode:
     description: 'Whether to setup Xcode'
     required: true
-  generate_project:
-    description: 'Whether to generate Xcode project'
+  generate_code:
+    description: 'Whether to generate code (assets + Xcode project)'
     required: true
   setup_ruby:
     description: 'Whether to setup Ruby'
@@ -47,9 +47,13 @@ runs:
     - name: Install just
       uses: extractions/setup-just@v2
 
-    - name: Generate Xcode Project
-      if: inputs.generate_project == 'true'
-      run: just gen-pj
+    - name: Bootstrap Mint packages
+      run: mint bootstrap
+      shell: bash
+
+    - name: Generate code (assets + Xcode project)
+      if: inputs.generate_code == 'true'
+      run: just gen
       shell: bash
 
     - name: Setup Ruby

@@ -198,11 +198,11 @@ test:
     @just pkg-test
     @just fastlane::test-all
 
-# Usage: just pkg-test [test_target] [ci] [extra_args]
-# test_target: Optional test target name (e.g., GameFeatureCoreTests)
+# Usage: just pkg-test [filter] [ci] [extra_args]
+# filter: Optional regex to filter tests (e.g., "GameFeatureCoreTests")
 # ci: Optional CI mode flag ("true" limits workers to 1)
 # extra_args: Additional arguments passed to swift test (e.g. "--skip-build")
-pkg-test test_target="" ci="false" *extra_args:
+pkg-test filter="" ci="false" *extra_args:
     #!/usr/bin/env bash
     set -e
     mkdir -p {{SWIFTPM_DEP_CACHE}}
@@ -214,10 +214,10 @@ pkg-test test_target="" ci="false" *extra_args:
         ARGS_ARRAY+=("$arg")
     done
     
-    if [ -n "{{test_target}}" ];
+    if [ -n "{{filter}}" ];
     then
-        ARGS_ARRAY+=(--filter "{{test_target}}")
-        echo "📋 Target: {{test_target}}"
+        ARGS_ARRAY+=(--filter "{{filter}}")
+        echo "📋 Filtering tests with: {{filter}}"
     else
         echo "📋 Running all tests"
     fi
@@ -228,7 +228,8 @@ pkg-test test_target="" ci="false" *extra_args:
         ARGS_ARRAY+=(--parallel --num-workers 1)
     else
         echo "🚀 Local Mode: Running in parallel..."
-        ARGS_ARRAY+=(--parallel --num-workers 8)
+        WORKERS=$(sysctl -n hw.ncpu)
+        ARGS_ARRAY+=(--parallel --num-workers "$WORKERS")
     fi
     
     echo "Running: swift test ${ARGS_ARRAY[@]}"
