@@ -8,7 +8,7 @@ jobs:
     runs-on: macos-15
     permissions:
       contents: read
-    timeout-minutes: 30
+    timeout-minutes: 40
     env:
       MINT_PATH: ${{ github.workspace }}/.mint
     steps:
@@ -38,7 +38,7 @@ jobs:
     runs-on: macos-15
     permissions:
       contents: read
-    timeout-minutes: 30
+    timeout-minutes: 40
     needs: build-test
     env:
       MINT_PATH: ${{ github.workspace }}/.mint
@@ -76,7 +76,7 @@ jobs:
     runs-on: macos-15
     permissions:
       contents: read
-    timeout-minutes: 30
+    timeout-minutes: 40
     needs: build-test
     env:
       MINT_PATH: ${{ github.workspace }}/.mint
@@ -114,7 +114,7 @@ jobs:
     runs-on: macos-15
     permissions:
       contents: read
-    timeout-minutes: 30
+    timeout-minutes: 40
     needs: build-test
     env:
       MINT_PATH: ${{ github.workspace }}/.mint
