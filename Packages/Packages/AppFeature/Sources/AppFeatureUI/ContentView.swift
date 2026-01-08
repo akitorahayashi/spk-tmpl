@@ -16,16 +16,12 @@
     }
 
     public var body: some View {
-      SwitchStore(self.store) { state in
-        switch state {
-          case .home:
-            CaseLet(\AppFeature.State.home, action: AppFeature.Action.home) { homeStore in
-              HomeView(store: homeStore)
-            }
-          case .game:
-            CaseLet(\AppFeature.State.game, action: AppFeature.Action.game) { gameStore in
-              GameRootView(store: gameStore)
-            }
+      SwitchStore(self.store) {
+        CaseLet(\.home, action: \.home) { homeStore in
+          HomeView(store: homeStore)
+        }
+        CaseLet(\.game, action: \.game) { gameStore in
+          GameRootView(store: gameStore)
         }
       }
       .task {
