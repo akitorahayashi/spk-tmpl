@@ -9,45 +9,15 @@ final class GameFeatureTests: XCTestCase {
 
   func testInitialState() {
     let state = GameFeature.State()
-    XCTAssertEqual(state.phase, .home)
     XCTAssertEqual(state.killCount, 0)
-  }
-
-  // MARK: - Start Game
-
-  func testStartGame() async {
-    let store = TestStore(initialState: GameFeature.State()) {
-      GameFeature()
-    }
-
-    await store.send(.startGame) {
-      $0.phase = .playing
-      $0.killCount = 0
-    }
-  }
-
-  func testStartGameIgnoredWhenPlaying() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .playing, killCount: 5)) {
-      GameFeature()
-    }
-
-    await store.send(.startGame)
-    // No state change expected
-  }
-
-  func testStartGameIgnoredWhenEnded() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .ended(.won))) {
-      GameFeature()
-    }
-
-    await store.send(.startGame)
-    // No state change expected
+    XCTAssertNil(state.result)
+    XCTAssertTrue(state.isPlaying)
   }
 
   // MARK: - Player Killed Enemy
 
   func testPlayerKilledEnemy() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .playing, killCount: 0)) {
+    let store = TestStore(initialState: GameFeature.State()) {
       GameFeature()
     }
 
@@ -57,7 +27,7 @@ final class GameFeatureTests: XCTestCase {
   }
 
   func testPlayerKilledEnemyMultipleTimes() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .playing, killCount: 5)) {
+    let store = TestStore(initialState: GameFeature.State(killCount: 5)) {
       GameFeature()
     }
 
@@ -69,17 +39,8 @@ final class GameFeatureTests: XCTestCase {
     }
   }
 
-  func testPlayerKilledEnemyIgnoredWhenHome() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .home)) {
-      GameFeature()
-    }
-
-    await store.send(.playerKilledEnemy)
-    // No state change expected
-  }
-
   func testPlayerKilledEnemyIgnoredWhenEnded() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .ended(.lost))) {
+    let store = TestStore(initialState: GameFeature.State(result: .lost)) {
       GameFeature()
     }
 
@@ -91,54 +52,48 @@ final class GameFeatureTests: XCTestCase {
 
   func testWinConditionAtExactKills() async {
     let store = TestStore(
-      initialState: GameFeature.State(phase: .playing, killCount: GameFeature.killsToWin - 1)
+      initialState: GameFeature.State(killCount: GameFeature.killsToWin - 1)
     ) {
       GameFeature()
     }
 
     await store.send(.playerKilledEnemy) {
       $0.killCount = GameFeature.killsToWin
-      $0.phase = .ended(.won)
+      $0.result = .won
     }
+    await store.receive(.delegate(.gameEnded(.won)))
   }
 
   func testWinConditionBeyondKills() async {
     // Edge case: if somehow kill count is already at threshold
     let store = TestStore(
-      initialState: GameFeature.State(phase: .playing, killCount: GameFeature.killsToWin)
+      initialState: GameFeature.State(killCount: GameFeature.killsToWin)
     ) {
       GameFeature()
     }
 
     await store.send(.playerKilledEnemy) {
       $0.killCount = GameFeature.killsToWin + 1
-      $0.phase = .ended(.won)
+      $0.result = .won
     }
+    await store.receive(.delegate(.gameEnded(.won)))
   }
 
   // MARK: - Player Was Hit
 
   func testPlayerWasHit() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .playing, killCount: 5)) {
+    let store = TestStore(initialState: GameFeature.State(killCount: 5)) {
       GameFeature()
     }
 
     await store.send(.playerWasHit) {
-      $0.phase = .ended(.lost)
+      $0.result = .lost
     }
-  }
-
-  func testPlayerWasHitIgnoredWhenHome() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .home)) {
-      GameFeature()
-    }
-
-    await store.send(.playerWasHit)
-    // No state change expected
+    await store.receive(.delegate(.gameEnded(.lost)))
   }
 
   func testPlayerWasHitIgnoredWhenEnded() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .ended(.won))) {
+    let store = TestStore(initialState: GameFeature.State(result: .won)) {
       GameFeature()
     }
 
@@ -146,45 +101,32 @@ final class GameFeatureTests: XCTestCase {
     // No state change expected
   }
 
-  // MARK: - Return to Home
+  // MARK: - Continue Tapped
 
-  func testReturnToHomeFromWon() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .ended(.won), killCount: 10)) {
+  func testContinueTappedFromWon() async {
+    let store = TestStore(initialState: GameFeature.State(killCount: 10, result: .won)) {
       GameFeature()
     }
 
-    await store.send(.returnToHome) {
-      $0.phase = .home
-      $0.killCount = 0
-    }
+    await store.send(.continueTapped)
+    await store.receive(.delegate(.returnToHome))
   }
 
-  func testReturnToHomeFromLost() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .ended(.lost), killCount: 3)) {
+  func testContinueTappedFromLost() async {
+    let store = TestStore(initialState: GameFeature.State(killCount: 3, result: .lost)) {
       GameFeature()
     }
 
-    await store.send(.returnToHome) {
-      $0.phase = .home
-      $0.killCount = 0
-    }
+    await store.send(.continueTapped)
+    await store.receive(.delegate(.returnToHome))
   }
 
-  func testReturnToHomeIgnoredWhenHome() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .home)) {
+  func testContinueTappedIgnoredWhenPlaying() async {
+    let store = TestStore(initialState: GameFeature.State(killCount: 5)) {
       GameFeature()
     }
 
-    await store.send(.returnToHome)
-    // No state change expected
-  }
-
-  func testReturnToHomeIgnoredWhenPlaying() async {
-    let store = TestStore(initialState: GameFeature.State(phase: .playing, killCount: 5)) {
-      GameFeature()
-    }
-
-    await store.send(.returnToHome)
+    await store.send(.continueTapped)
     // No state change expected
   }
 
@@ -193,11 +135,6 @@ final class GameFeatureTests: XCTestCase {
   func testFullWinFlow() async {
     let store = TestStore(initialState: GameFeature.State()) {
       GameFeature()
-    }
-
-    // Start game
-    await store.send(.startGame) {
-      $0.phase = .playing
     }
 
     // Kill enemies until win
@@ -210,24 +147,18 @@ final class GameFeatureTests: XCTestCase {
     // Final kill triggers win
     await store.send(.playerKilledEnemy) {
       $0.killCount = GameFeature.killsToWin
-      $0.phase = .ended(.won)
+      $0.result = .won
     }
+    await store.receive(.delegate(.gameEnded(.won)))
 
-    // Return to home
-    await store.send(.returnToHome) {
-      $0.phase = .home
-      $0.killCount = 0
-    }
+    // Continue tapped
+    await store.send(.continueTapped)
+    await store.receive(.delegate(.returnToHome))
   }
 
   func testFullLossFlow() async {
     let store = TestStore(initialState: GameFeature.State()) {
       GameFeature()
-    }
-
-    // Start game
-    await store.send(.startGame) {
-      $0.phase = .playing
     }
 
     // Kill some enemies
@@ -240,13 +171,12 @@ final class GameFeatureTests: XCTestCase {
 
     // Get hit
     await store.send(.playerWasHit) {
-      $0.phase = .ended(.lost)
+      $0.result = .lost
     }
+    await store.receive(.delegate(.gameEnded(.lost)))
 
-    // Return to home
-    await store.send(.returnToHome) {
-      $0.phase = .home
-      $0.killCount = 0
-    }
+    // Continue tapped
+    await store.send(.continueTapped)
+    await store.receive(.delegate(.returnToHome))
   }
 }

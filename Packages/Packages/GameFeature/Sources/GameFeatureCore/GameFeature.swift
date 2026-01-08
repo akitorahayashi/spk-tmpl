@@ -1,13 +1,10 @@
 import ComposableArchitecture
-import Dependencies
 import Foundation
 
-/// A feature that manages the game lifecycle with phase-based state transitions.
+/// A feature that manages pure gameplay logic.
 ///
-/// The game follows a simple state machine:
-/// - `home`: Title screen waiting for user input
-/// - `playing`: Active gameplay with kill tracking
-/// - `ended`: Game over screen showing result
+/// The game is considered "playing" from initialization. It tracks kills
+/// and notifies the parent when the game ends (win or loss) via delegate actions.
 @Reducer
 public struct GameFeature: Sendable {
   public init() {}
@@ -17,61 +14,65 @@ public struct GameFeature: Sendable {
 
   @ObservableState
   public struct State: Equatable, Sendable {
-    /// The current phase of the game lifecycle.
-    public var phase: AppPhase
-
     /// The number of enemies killed in the current game session.
     public var killCount: Int
 
-    public init(
-      phase: AppPhase = .home,
-      killCount: Int = 0
-    ) {
-      self.phase = phase
+    /// The result of the game, set when the game ends.
+    public var result: GameResult?
+
+    /// Whether the game is still in progress (no result yet).
+    public var isPlaying: Bool { self.result == nil }
+
+    public init(killCount: Int = 0, result: GameResult? = nil) {
       self.killCount = killCount
+      self.result = result
     }
   }
 
   public enum Action: Equatable, Sendable {
-    /// User tapped to start a new game from the home screen.
-    case startGame
-
     /// Player's bullet hit an enemy.
     case playerKilledEnemy
 
     /// Enemy bullet hit the player.
     case playerWasHit
 
-    /// User tapped to return to home from the ended screen.
-    case returnToHome
+    /// User tapped to continue from the ended screen.
+    case continueTapped
+
+    /// Delegate actions to communicate with parent.
+    case delegate(Delegate)
+
+    public enum Delegate: Equatable, Sendable {
+      /// Notify parent that the game has ended with a result.
+      case gameEnded(GameResult)
+
+      /// Request parent to return to home.
+      case returnToHome
+    }
   }
 
   public var body: some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
-        case .startGame:
-          guard state.phase == .home else { return .none }
-          state.phase = .playing
-          state.killCount = 0
-          return .none
-
         case .playerKilledEnemy:
-          guard state.phase == .playing else { return .none }
+          guard state.isPlaying else { return .none }
           state.killCount += 1
           if state.killCount >= Self.killsToWin {
-            state.phase = .ended(.won)
+            state.result = .won
+            return .send(.delegate(.gameEnded(.won)))
           }
           return .none
 
         case .playerWasHit:
-          guard state.phase == .playing else { return .none }
-          state.phase = .ended(.lost)
-          return .none
+          guard state.isPlaying else { return .none }
+          state.result = .lost
+          return .send(.delegate(.gameEnded(.lost)))
 
-        case .returnToHome:
-          guard case .ended = state.phase else { return .none }
-          state.phase = .home
-          state.killCount = 0
+        case .continueTapped:
+          guard state.result != nil else { return .none }
+          return .send(.delegate(.returnToHome))
+
+        case .delegate:
           return .none
       }
     }
