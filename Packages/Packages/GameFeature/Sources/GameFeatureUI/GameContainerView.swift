@@ -28,16 +28,23 @@
           .onChange(of: geometry.size) { _, newSize in
             self.scene?.size = newSize
           }
+          .task {
+            await self.store.send(.task).finish()
+          }
       }
     }
 
     private func createScene(size: CGSize) {
       let newScene = GameScene.create(size: size)
+      // TODO: For template users - Rename GameScene callbacks to match your game domain
+      // (e.g., onPointScored, onCoinCollected, onPlayerDied)
+      // These placeholder names (onPlayerKilledEnemy, onPlayerWasHit) are from the
+      // original shooting game example and should be customized.
       newScene.onPlayerKilledEnemy = {
-        self.store.send(.playerKilledEnemy)
+        self.store.send(.scoreIncremented(amount: 1))
       }
       newScene.onPlayerWasHit = {
-        self.store.send(.playerWasHit)
+        self.store.send(.playerDied)
       }
       self.scene = newScene
     }

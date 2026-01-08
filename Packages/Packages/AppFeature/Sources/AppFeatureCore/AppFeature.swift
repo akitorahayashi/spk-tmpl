@@ -35,7 +35,9 @@ public struct AppFeature: Sendable {
     Reduce { state, action in
       switch action {
         case .home(.delegate(.startGame)):
-          state = .game(GameFeature.State())
+          // Inject the game rule for the level.
+          // Template users can customize this to create different game modes.
+          state = .game(GameFeature.State(rule: .defaultRule))
           return .none
 
         case .home:

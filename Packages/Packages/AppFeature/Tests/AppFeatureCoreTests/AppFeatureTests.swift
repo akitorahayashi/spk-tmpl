@@ -19,7 +19,7 @@ final class AppFeatureTests: XCTestCase {
 
     await store.send(.home(.startTapped))
     await store.receive(.home(.delegate(.startGame))) {
-      $0 = .game(GameFeature.State())
+      $0 = .game(GameFeature.State(rule: .defaultRule))
     }
   }
 
@@ -42,36 +42,36 @@ final class AppFeatureTests: XCTestCase {
     await store.send(.onAppear)
   }
 
-  func testGamePlayerKilledEnemy() async {
+  func testGameScoreIncremented() async {
     let store = TestStore(initialState: AppFeature.State.game(GameFeature.State())) {
       AppFeature()
     }
 
-    await store.send(.game(.playerKilledEnemy)) {
-      $0 = .game(GameFeature.State(killCount: 1))
+    await store.send(.game(.scoreIncremented(amount: 1))) {
+      $0 = .game(GameFeature.State(score: 1))
     }
   }
 
-  func testGamePlayerWasHit() async {
-    let store = TestStore(initialState: AppFeature.State.game(GameFeature.State(killCount: 5))) {
+  func testGamePlayerDied() async {
+    let store = TestStore(initialState: AppFeature.State.game(GameFeature.State(score: 5))) {
       AppFeature()
     }
 
-    await store.send(.game(.playerWasHit)) {
-      $0 = .game(GameFeature.State(killCount: 5, result: .lost))
+    await store.send(.game(.playerDied)) {
+      $0 = .game(GameFeature.State(score: 5, result: .lost))
     }
     await store.receive(.game(.delegate(.gameEnded(.lost))))
   }
 
   func testGameWinCondition() async {
     let store = TestStore(
-      initialState: AppFeature.State.game(GameFeature.State(killCount: GameFeature.killsToWin - 1))
+      initialState: AppFeature.State.game(GameFeature.State(rule: .defaultRule, score: 9))
     ) {
       AppFeature()
     }
 
-    await store.send(.game(.playerKilledEnemy)) {
-      $0 = .game(GameFeature.State(killCount: GameFeature.killsToWin, result: .won))
+    await store.send(.game(.scoreIncremented(amount: 1))) {
+      $0 = .game(GameFeature.State(rule: .defaultRule, score: 10, result: .won))
     }
     await store.receive(.game(.delegate(.gameEnded(.won))))
   }
