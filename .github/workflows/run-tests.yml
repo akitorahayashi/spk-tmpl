@@ -8,7 +8,7 @@ jobs:
     runs-on: macos-15
     permissions:
       contents: read
-    timeout-minutes: 30
+    timeout-minutes: 40
     env:
       MINT_PATH: ${{ github.workspace }}/.mint
     steps:
@@ -20,7 +20,7 @@ jobs:
         uses: ./.github/actions/setup
         with:
           setup_xcode: true
-          generate_project: true
+          generate_code: true
           setup_ruby: true
 
       - name: Build for Testing
@@ -38,7 +38,7 @@ jobs:
     runs-on: macos-15
     permissions:
       contents: read
-    timeout-minutes: 30
+    timeout-minutes: 40
     needs: build-test
     env:
       MINT_PATH: ${{ github.workspace }}/.mint
@@ -51,7 +51,7 @@ jobs:
         uses: ./.github/actions/setup
         with:
           setup_xcode: true
-          generate_project: true
+          generate_code: true
           setup_ruby: true
 
       - name: Download build artifacts
@@ -76,7 +76,7 @@ jobs:
     runs-on: macos-15
     permissions:
       contents: read
-    timeout-minutes: 30
+    timeout-minutes: 40
     needs: build-test
     env:
       MINT_PATH: ${{ github.workspace }}/.mint
@@ -89,7 +89,7 @@ jobs:
         uses: ./.github/actions/setup
         with:
           setup_xcode: true
-          generate_project: true
+          generate_code: true
           setup_ruby: true
 
       - name: Download build artifacts
@@ -114,7 +114,7 @@ jobs:
     runs-on: macos-15
     permissions:
       contents: read
-    timeout-minutes: 30
+    timeout-minutes: 40
     needs: build-test
     env:
       MINT_PATH: ${{ github.workspace }}/.mint
@@ -127,7 +127,7 @@ jobs:
         uses: ./.github/actions/setup
         with:
           setup_xcode: true
-          generate_project: true
+          generate_code: true
           setup_ruby: true
 
       - name: Download build artifacts

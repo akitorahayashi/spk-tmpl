@@ -50,10 +50,12 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Setup Xcode
-        uses: maxim-lobanov/setup-xcode@v1
+      - name: Setup
+        uses: ./.github/actions/setup
         with:
-          xcode-version: '26.0'
+          setup_xcode: true
+          generate_code: true
+          setup_ruby: false
 
       - name: Build All Tests
         run: |

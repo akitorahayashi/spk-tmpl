@@ -1,0 +1,12 @@
+input_dir: Packages/Packages/SharedResources/Sources/SharedResources/Resources
+output_dir: Packages/Packages/SharedResources/Sources/SharedResources/Generated
+
+xcassets:
+  inputs: Media.xcassets
+  outputs:
+    - templatePath: .swiftgen-templates/xcassets-swift6.stencil
+      output: Asset+Generated.swift
+      params:
+        bundle: Bundle.module
+        forceProvidesNamespaces: true
+        publicAccess: true

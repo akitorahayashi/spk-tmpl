@@ -16,6 +16,9 @@ let package = Package(
     // Game Feature
     .library(name: "GameFeatureCore", targets: ["GameFeatureCore"]),
     .library(name: "GameFeatureUI", targets: ["GameFeatureUI"]),
+
+    // Shared Resources
+    .library(name: "SharedResources", targets: ["SharedResources"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.23.1"),
@@ -110,6 +113,7 @@ let package = Package(
       name: "GameFeatureUI",
       dependencies: [
         "GameFeatureCore",
+        "SharedResources",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
       path: "Packages/GameFeature/Sources/GameFeatureUI"
@@ -122,6 +126,17 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
       ],
       path: "Packages/GameFeature/Tests/GameFeatureCoreTests"
+    ),
+
+    // MARK: - Shared Resources
+
+    .target(
+      name: "SharedResources",
+      dependencies: [],
+      path: "Packages/SharedResources/Sources/SharedResources",
+      resources: [
+        .process("Resources"),
+      ]
     ),
   ]
 )

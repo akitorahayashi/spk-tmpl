@@ -31,7 +31,7 @@ jobs:
         uses: ./.github/actions/setup
         with:
           setup_xcode: true
-          generate_project: true
+          generate_code: true
           setup_ruby: true
 
       - name: Build Unsigned Release Version
