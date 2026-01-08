@@ -22,27 +22,27 @@ final class FeatureTests: XCTestCase {
 
     await store.send(.home(.startTapped))
     await store.receive(.home(.delegate(.startGame))) {
-      $0 = .game(GameFeature.State())
+      $0 = .game(GameFeature.State(rule: .defaultRule))
     }
   }
 
-  func testAppFeatureGamePlayerKilledEnemy() async {
+  func testAppFeatureGameScoreIncrement() async {
     let store = TestStore(initialState: AppFeature.State.game(GameFeature.State())) {
       AppFeature()
     }
 
-    await store.send(.game(.playerKilledEnemy)) {
-      $0 = .game(GameFeature.State(killCount: 1))
+    await store.send(.game(.scoreIncremented(amount: 1))) {
+      $0 = .game(GameFeature.State(score: 1))
     }
   }
 
-  func testAppFeatureGamePlayerWasHit() async {
-    let store = TestStore(initialState: AppFeature.State.game(GameFeature.State(killCount: 5))) {
+  func testAppFeatureGamePlayerDied() async {
+    let store = TestStore(initialState: AppFeature.State.game(GameFeature.State(score: 5))) {
       AppFeature()
     }
 
-    await store.send(.game(.playerWasHit)) {
-      $0 = .game(GameFeature.State(killCount: 5, result: .lost))
+    await store.send(.game(.playerDied)) {
+      $0 = .game(GameFeature.State(score: 5, result: .lost))
     }
     await store.receive(.game(.delegate(.gameEnded(.lost))))
   }
@@ -68,19 +68,19 @@ final class FeatureTests: XCTestCase {
     // Start game from home
     await store.send(.home(.startTapped))
     await store.receive(.home(.delegate(.startGame))) {
-      $0 = .game(GameFeature.State())
+      $0 = .game(GameFeature.State(rule: .defaultRule))
     }
 
-    // Kill 10 enemies to win
-    for i in 1 ..< GameFeature.killsToWin {
-      await store.send(.game(.playerKilledEnemy)) {
-        $0 = .game(GameFeature.State(killCount: i))
+    // Score 10 points to win
+    for i in 1 ..< 10 {
+      await store.send(.game(.scoreIncremented(amount: 1))) {
+        $0 = .game(GameFeature.State(rule: .defaultRule, score: i))
       }
     }
 
-    // Final kill triggers win
-    await store.send(.game(.playerKilledEnemy)) {
-      $0 = .game(GameFeature.State(killCount: GameFeature.killsToWin, result: .won))
+    // Final point triggers win
+    await store.send(.game(.scoreIncremented(amount: 1))) {
+      $0 = .game(GameFeature.State(rule: .defaultRule, score: 10, result: .won))
     }
     await store.receive(.game(.delegate(.gameEnded(.won))))
 
@@ -100,17 +100,17 @@ final class FeatureTests: XCTestCase {
     // Start game from home
     await store.send(.home(.startTapped))
     await store.receive(.home(.delegate(.startGame))) {
-      $0 = .game(GameFeature.State())
+      $0 = .game(GameFeature.State(rule: .defaultRule))
     }
 
-    // Kill some enemies
-    await store.send(.game(.playerKilledEnemy)) {
-      $0 = .game(GameFeature.State(killCount: 1))
+    // Score some points
+    await store.send(.game(.scoreIncremented(amount: 1))) {
+      $0 = .game(GameFeature.State(rule: .defaultRule, score: 1))
     }
 
-    // Get hit
-    await store.send(.game(.playerWasHit)) {
-      $0 = .game(GameFeature.State(killCount: 1, result: .lost))
+    // Die
+    await store.send(.game(.playerDied)) {
+      $0 = .game(GameFeature.State(rule: .defaultRule, score: 1, result: .lost))
     }
     await store.receive(.game(.delegate(.gameEnded(.lost))))
 

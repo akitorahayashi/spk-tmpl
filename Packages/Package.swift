@@ -24,6 +24,7 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.1.1"),
     .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "1.6.0"),
     .package(url: "https://github.com/pointfreeco/swift-perception", from: "2.0.9"),
+    .package(url: "https://github.com/pointfreeco/swift-clocks", from: "1.0.0"),
   ],
   targets: [
     // MARK: - App Feature
@@ -101,6 +102,7 @@ let package = Package(
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
+        .product(name: "Clocks", package: "swift-clocks"),
       ],
       path: "Packages/GameFeature/Sources/GameFeatureCore"
     ),
