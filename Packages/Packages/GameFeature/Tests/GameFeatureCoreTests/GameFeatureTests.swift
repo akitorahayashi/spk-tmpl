@@ -180,15 +180,19 @@ final class GameFeatureTests: XCTestCase {
       $0.score = 10
     }
 
-    // Advance to time limit without reaching score target
-    await clock.advance(by: .seconds(30))
-    for _ in 1 ... 30 {
+    // Advance to time limit - 1 second
+    await clock.advance(by: .seconds(29))
+    for i in 1 ... 29 {
       await store.receive(\.timerTick) {
-        $0.timeElapsed += 1
-        if $0.timeElapsed == 30 {
-          $0.result = .lost
-        }
+        $0.timeElapsed = TimeInterval(i)
       }
+    }
+
+    // Advance to time limit to trigger loss
+    await clock.advance(by: .seconds(1))
+    await store.receive(\.timerTick) {
+      $0.timeElapsed = 30
+      $0.result = .lost
     }
     await store.receive(.delegate(.gameEnded(.lost)))
 
@@ -206,15 +210,19 @@ final class GameFeatureTests: XCTestCase {
 
     let task = await store.send(.task)
 
-    // Advance exactly to the limit
-    await clock.advance(by: .seconds(5))
-    for i in 1 ... 5 {
+    // Advance to the limit - 1 second
+    await clock.advance(by: .seconds(4))
+    for i in 1 ... 4 {
       await store.receive(\.timerTick) {
         $0.timeElapsed = TimeInterval(i)
-        if i == 5 {
-          $0.result = .lost
-        }
       }
+    }
+
+    // Advance to the limit to trigger loss
+    await clock.advance(by: .seconds(1))
+    await store.receive(\.timerTick) {
+      $0.timeElapsed = 5
+      $0.result = .lost
     }
     await store.receive(.delegate(.gameEnded(.lost)))
 

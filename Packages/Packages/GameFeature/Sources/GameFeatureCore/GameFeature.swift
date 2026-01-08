@@ -91,12 +91,12 @@ public struct GameFeature: Sendable {
         case .timerTick:
           guard state.isPlaying else { return .none }
           state.timeElapsed += 1
-          return checkRule(state: &state)
+          return self.checkRule(state: &state)
 
         case let .scoreIncremented(amount):
           guard state.isPlaying else { return .none }
           state.score += amount
-          return checkRule(state: &state)
+          return self.checkRule(state: &state)
 
         case .playerDied:
           guard state.isPlaying else { return .none }
