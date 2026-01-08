@@ -47,10 +47,6 @@ runs:
     - name: Install just
       uses: extractions/setup-just@v2
 
-    - name: Bootstrap Mint packages
-      run: mint bootstrap
-      shell: bash
-
     - name: Generate code (assets + Xcode project)
       if: inputs.generate_code == 'true'
       run: just gen
