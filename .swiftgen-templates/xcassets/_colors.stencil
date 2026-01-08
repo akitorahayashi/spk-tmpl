@@ -1,0 +1,71 @@
+{% macro colorCase asset %}
+  {% if asset.type == "color" %}
+  {{accessModifier}} static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{colorType}}(name: "{{asset.value}}")
+  {% endif %}
+{% endmacro %}
+
+{% macro colorImplementation %}
+{{accessModifier}} final class {{colorType}} {
+  {{accessModifier}} fileprivate(set) var name: String
+
+  #if os(macOS)
+  {{accessModifier}} typealias Color = NSColor
+  #elseif os(iOS) || os(tvOS) || os(watchOS)
+  {{accessModifier}} typealias Color = UIColor
+  #endif
+
+  @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
+  {{accessModifier}} private(set) lazy var color: Color = {
+    guard let color = Color(asset: self) else {
+      fatalError("Unable to load color asset named \(name).")
+    }
+    return color
+  }()
+
+  #if os(iOS) || os(tvOS)
+  @available(iOS 11.0, tvOS 11.0, *)
+  {{accessModifier}} func color(compatibleWith traitCollection: UITraitCollection) -> Color {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    guard let color = Color(named: name, in: bundle, compatibleWith: traitCollection) else {
+      fatalError("Unable to load color asset named \(name).")
+    }
+    return color
+  }
+  #endif
+
+  #if canImport(SwiftUI)
+  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+  {{accessModifier}} private(set) lazy var swiftUIColor: SwiftUI.Color = {
+    SwiftUI.Color(asset: self)
+  }()
+  #endif
+
+  fileprivate init(name: String) {
+    self.name = name
+  }
+}
+
+{{accessModifier}} extension {{colorType}}.Color {
+  @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
+  convenience init?(asset: {{colorType}}) {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    #if os(iOS) || os(tvOS)
+    self.init(named: asset.name, in: bundle, compatibleWith: nil)
+    #elseif os(macOS)
+    self.init(named: NSColor.Name(asset.name), bundle: bundle)
+    #elseif os(watchOS)
+    self.init(named: asset.name)
+    #endif
+  }
+}
+
+#if canImport(SwiftUI)
+@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+{{accessModifier}} extension SwiftUI.Color {
+  init(asset: {{colorType}}) {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    self.init(asset.name, bundle: bundle)
+  }
+}
+#endif
+{% endmacro %}

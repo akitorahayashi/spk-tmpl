@@ -1,0 +1,41 @@
+{% macro arResourceGroupCase asset %}
+  {% if asset.type == "arresourcegroup" %}
+  {{accessModifier}} static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{arResourceGroupType}}(name: "{{asset.value}}")
+  {% endif %}
+{% endmacro %}
+
+{% macro arResourceGroupImplementation %}
+{{accessModifier}} struct {{arResourceGroupType}} {
+  {{accessModifier}} fileprivate(set) var name: String
+
+  #if os(iOS)
+  @available(iOS 11.3, *)
+  {{accessModifier}} var referenceImages: Set<ARReferenceImage> {
+    return ARReferenceImage.referenceImages(in: self)
+  }
+
+  @available(iOS 12.0, *)
+  {{accessModifier}} var referenceObjects: Set<ARReferenceObject> {
+    return ARReferenceObject.referenceObjects(in: self)
+  }
+  #endif
+}
+
+#if os(iOS)
+@available(iOS 11.3, *)
+{{accessModifier}} extension ARReferenceImage {
+  static func referenceImages(in asset: {{arResourceGroupType}}) -> Set<ARReferenceImage> {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    return referenceImages(inGroupNamed: asset.name, bundle: bundle) ?? Set()
+  }
+}
+
+@available(iOS 12.0, *)
+{{accessModifier}} extension ARReferenceObject {
+  static func referenceObjects(in asset: {{arResourceGroupType}}) -> Set<ARReferenceObject> {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    return referenceObjects(inGroupNamed: asset.name, bundle: bundle) ?? Set()
+  }
+}
+#endif
+{% endmacro %}

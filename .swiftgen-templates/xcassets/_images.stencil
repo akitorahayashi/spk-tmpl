@@ -1,0 +1,88 @@
+{% macro imageCase asset %}
+  {% if asset.type == "image" %}
+  {{accessModifier}} static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{imageType}}(name: "{{asset.value}}")
+  {% endif %}
+{% endmacro %}
+
+{% macro imageImplementation %}
+{{accessModifier}} struct {{imageType}}: Sendable {
+  {{accessModifier}} let name: String
+
+  #if os(macOS)
+  {{accessModifier}} typealias Image = NSImage
+  #elseif os(iOS) || os(tvOS) || os(watchOS)
+  {{accessModifier}} typealias Image = UIImage
+  #endif
+
+  @available(iOS 8.0, tvOS 9.0, watchOS 2.0, macOS 10.7, *)
+  {{accessModifier}} var image: Image {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    #if os(iOS) || os(tvOS)
+    let image = Image(named: name, in: bundle, compatibleWith: nil)
+    #elseif os(macOS)
+    let name = NSImage.Name(self.name)
+    let image = (bundle == .main) ? NSImage(named: name) : bundle.image(forResource: name)
+    #elseif os(watchOS)
+    let image = Image(named: name)
+    #endif
+    guard let result = image else {
+      fatalError("Unable to load image asset named \(name).")
+    }
+    return result
+  }
+
+  #if os(iOS) || os(tvOS)
+  @available(iOS 8.0, tvOS 9.0, *)
+  {{accessModifier}} func image(compatibleWith traitCollection: UITraitCollection) -> Image {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    guard let result = Image(named: name, in: bundle, compatibleWith: traitCollection) else {
+      fatalError("Unable to load image asset named \(name).")
+    }
+    return result
+  }
+  #endif
+
+  #if canImport(SwiftUI)
+  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+  {{accessModifier}} var swiftUIImage: SwiftUI.Image {
+    SwiftUI.Image(asset: self)
+  }
+  #endif
+}
+
+{{accessModifier}} extension {{imageType}}.Image {
+  @available(iOS 8.0, tvOS 9.0, watchOS 2.0, *)
+  @available(macOS, deprecated,
+    message: "This initializer is unsafe on macOS, please use the {{imageType}}.image property")
+  convenience init?(asset: {{imageType}}) {
+    #if os(iOS) || os(tvOS)
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    self.init(named: asset.name, in: bundle, compatibleWith: nil)
+    #elseif os(macOS)
+    self.init(named: NSImage.Name(asset.name))
+    #elseif os(watchOS)
+    self.init(named: asset.name)
+    #endif
+  }
+}
+
+#if canImport(SwiftUI)
+@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+{{accessModifier}} extension SwiftUI.Image {
+  init(asset: {{imageType}}) {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    self.init(asset.name, bundle: bundle)
+  }
+
+  init(asset: {{imageType}}, label: Text) {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    self.init(asset.name, bundle: bundle, label: label)
+  }
+
+  init(decorative asset: {{imageType}}) {
+    let bundle = {{param.bundle|default:"BundleToken.bundle"}}
+    self.init(decorative: asset.name, bundle: bundle)
+  }
+}
+#endif
+{% endmacro %}
