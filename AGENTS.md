@@ -1,5 +1,5 @@
 # Project Overview
-This project is an iOS SpriteKit game template built with SwiftUI and The Composable Architecture (TCA). The architecture features a TCA-managed game lifecycle (home → playing → ended → home) with SpriteKit rendering the gameplay experience.
+This project is an iOS SpriteKit game template built with SwiftUI and The Composable Architecture (TCA). The architecture features state-driven routing between Home and Game screens using an enum-based app state for exclusive transitions.
 
 # Directory Structure
 ```
@@ -8,16 +8,22 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 │   └── Dependencies/          # App-level dependency configuration
 ├── Packages/                  # Local Swift package containing feature modules
 │   └── Packages/
-│       ├── AppFeature/        # Root feature composing the game feature
+│       ├── AppFeature/        # Root routing hub with enum state
 │       │   ├── Sources/
-│       │   │   ├── AppFeatureCore/   # Reducer, state, actions
-│       │   │   └── AppFeatureUI/       # SwiftUI views
+│       │   │   ├── AppFeatureCore/   # Enum state, routing reducer
+│       │   │   └── AppFeatureUI/     # SwitchStore-based view routing
 │       │   └── Tests/
 │       │       └── AppFeatureCoreTests/
-│       └── GameFeature/       # Game lifecycle and SpriteKit scene
+│       ├── HomeFeature/       # Title screen with start trigger
+│       │   ├── Sources/
+│       │   │   ├── HomeFeatureCore/  # Delegate-based start action
+│       │   │   └── HomeFeatureUI/    # HomeView with tap-to-start
+│       │   └── Tests/
+│       │       └── HomeFeatureCoreTests/
+│       └── GameFeature/       # Pure gameplay logic
 │           ├── Sources/
-│           │   ├── GameFeatureCore/  # Phase state machine reducer
-│           │   └── GameFeatureUI/      # SpriteKit scene and hosting views
+│           │   ├── GameFeatureCore/  # Kill tracking, delegate notifications
+│           │   └── GameFeatureUI/    # SpriteKit scene and hosting views
 │           └── Tests/
 │               └── GameFeatureCoreTests/
 ├── Tests/
@@ -34,18 +40,23 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 
 # Architecture & Implementation Details
 - **Architecture Pattern**: The Composable Architecture (TCA) + SpriteKit
-    - **Reducers**: Game phase management using @Reducer macro with @ObservableState
+    - **Reducers**: Feature logic using @Reducer macro with @ObservableState
     - **Views**: SwiftUI views binding to StoreOf<Feature> via @Bindable
     - **SpriteKit**: Gameplay rendered via UIViewRepresentable hosting SKView
     - **Dependencies**: Managed via pointfree Dependencies library (@Dependency, DependencyKey)
-    - **Navigation**: Store-driven phase transitions (home/playing/ended)
+    - **Navigation**: Enum-based app state with delegate-driven transitions
 - **Module Structure**:
     - *Core targets: Reducer, state, actions, dependencies (pure Swift, no SwiftUI)
     - *UI targets: SwiftUI views and SpriteKit scenes that scope stores and render state
-- **Game Phase State Machine**:
-    - home: Title screen waiting for user input
-    - playing: Active SpriteKit gameplay with kill tracking
-    - ended(GameResult): Result screen (won/lost) with return prompt
+- **Routing Architecture**:
+    - AppFeature.State is an enum with .home and .game cases
+    - HomeFeature sends .delegate(.startGame) to trigger navigation
+    - GameFeature sends .delegate(.returnToHome) after game ends
+    - SwitchStore with CaseLet renders the active screen
+- **Game Feature**:
+    - Initialized in "playing" state (no home phase)
+    - Tracks killCount and result (won/lost)
+    - Uses delegate actions for parent notification
 - **SpriteKit Integration**:
     - GameScene: Code-first scene with player/enemy/bullet nodes and physics
     - GameSceneView: UIViewRepresentable wrapper for SKView
@@ -88,14 +99,15 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 ### TCA Patterns
 - Reducers own all business logic; views remain thin
 - Use @Dependency for injectable services
-- Scope child features via Scope reducer and store.scope()
+- Child features use delegate actions for parent communication
+- AppFeature uses .ifCaseLet to scope child reducers from enum state
 - Test reducers with TestStore for exhaustive state assertions
 
 ### SpriteKit Integration
 - GameScene is code-first (no .sks dependencies)
 - Scene callbacks forward events to TCA via closures
 - SpriteKit handles physics and frame-based behavior
-- TCA manages phase transitions and app-level state
+- GameFeature manages gameplay state; AppFeature manages navigation
 
 ### Platform-Specific Code & Package Tests
 - **UI targets contain iOS-only code** (UIKit, UIViewRepresentable, UITouch)
