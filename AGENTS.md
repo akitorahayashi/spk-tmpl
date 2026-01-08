@@ -4,7 +4,7 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 # Directory Structure
 ```
 .
-├── App/                       # Application shell with resources and dependency bootstrap
+├── App/                       # Application shell with resources (AppIcon) and dependency bootstrap
 │   └── Dependencies/          # App-level dependency configuration
 ├── Packages/                  # Local Swift package containing feature modules
 │   └── Packages/
@@ -20,21 +20,27 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 │       │   │   └── HomeFeatureUI/    # HomeView with tap-to-start
 │       │   └── Tests/
 │       │       └── HomeFeatureCoreTests/
-│       └── GameFeature/       # Pure gameplay logic
-│           ├── Sources/
-│           │   ├── GameFeatureCore/  # Kill tracking, delegate notifications
-│           │   └── GameFeatureUI/    # SpriteKit scene and hosting views
-│           └── Tests/
-│               └── GameFeatureCoreTests/
+│       ├── GameFeature/       # Pure gameplay logic
+│       │   ├── Sources/
+│       │   │   ├── GameFeatureCore/  # Kill tracking, delegate notifications
+│       │   │   └── GameFeatureUI/    # SpriteKit scene and hosting views
+│       │   └── Tests/
+│       │       └── GameFeatureCoreTests/
+│       └── SharedResources/   # Centralized asset management
+│           └── Sources/
+│               └── SharedResources/
+│                   ├── Resources/    # Media.xcassets
+│                   └── Generated/    # SwiftGen-generated code (git-ignored)
 ├── Tests/
 │   ├── Unit/                  # Unit tests for app-level code
 │   ├── Intg/                  # Integration tests with dependency overrides
 │   └── UI/                    # Black-box UI tests
 ├── fastlane/                  # Automation scripts for building, testing, and signing
 ├── justfile                   # Command runner configuration for project automation
+├── swiftgen.yml               # SwiftGen configuration for asset code generation
 ├── project.envsubst.yml       # XcodeGen template for project generation
 ├── dependencies.yml           # Package dependency products for target embedding
-├── Mintfile                   # Swift CLI tool dependencies
+├── Mintfile                   # Swift CLI tool dependencies (including SwiftGen)
 └── Gemfile                    # Ruby dependencies for Fastlane
 ```
 
@@ -76,12 +82,20 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
     - **Integration Tests**: Feature composition with dependency overrides
     - **UI Tests**: Black-box testing of the application UI
 
+## Asset Management
+- Assets in `Packages/Packages/SharedResources/Sources/SharedResources/Resources/Media.xcassets`
+- Generated code in `Packages/Packages/SharedResources/Sources/SharedResources/Generated/` (git-ignored)
+- Use `Asset.Category.SubCategory.assetName` for type-safe access (e.g., `Asset.Scenes.Game.Player.fighterJet`)
+- Run `just gen-as` after modifying assets
+
 ## Development Commands
+- **Setup**: just setup - Installs dependencies and runs all code generation
+- **Generate All**: just gen - Runs all code generation (gen-as + gen-pj)
+- **Generate Assets**: just gen-as - Regenerates SwiftGen asset code
+- **Generate Project**: just gen-pj - Regenerates the Xcode project from templates
 - **Check**: just check - Formats code with SwiftFormat and lints with SwiftLint
 - **Test**: just test - Runs all test suites (Package, Unit, Integration, UI)
-- **Package Test**: just package-test - Runs Swift package tests
-- **Setup**: just setup - Installs dependencies and generates the project
-- **Generate Project**: just gen-pj - Regenerates the Xcode project from templates
+- **Package Test**: just pkg-test - Runs Swift package tests
 
 ## Development Guidelines
 

@@ -1,4 +1,5 @@
 #if canImport(UIKit)
+  import SharedResources
   import SpriteKit
   import UIKit
 
@@ -29,8 +30,8 @@
 
     // MARK: - Nodes
 
-    private let player = SKSpriteNode(imageNamed: "fighter_jet")
-    private var enemy = SKSpriteNode(imageNamed: "enemy")
+    private let player = SKSpriteNode(asset: Asset.Scenes.Game.Player.fighterJet)
+    private var enemy = SKSpriteNode(asset: Asset.Scenes.Game.Enemies.enemy)
 
     // MARK: - State
 
@@ -85,7 +86,7 @@
     // MARK: - Setup
 
     private func setupBackground() {
-      let bg = SKSpriteNode(imageNamed: "universe_background")
+      let bg = SKSpriteNode(asset: Asset.Backgrounds.universeBackground)
       bg.name = NodeName.background
       bg.position = CGPoint(x: size.width / 2, y: size.height / 2)
       bg.zPosition = -10
@@ -115,7 +116,7 @@
     }
 
     private func createEnemyNode() -> SKSpriteNode {
-      let node = SKSpriteNode(imageNamed: "enemy")
+      let node = SKSpriteNode(asset: Asset.Scenes.Game.Enemies.enemy)
       node.setScale(0.25)
       node.position = CGPoint(x: size.width / 2, y: size.height * 0.82)
       node.zPosition = 10
@@ -150,7 +151,7 @@
     private func shootPlayerBullet() {
       guard !self.isEnded else { return }
 
-      let bullet = SKSpriteNode(imageNamed: "bullet_yellow")
+      let bullet = SKSpriteNode(asset: Asset.Items.Bullets.bulletYellow)
       bullet.name = NodeName.playerBullet
       bullet.setScale(0.125)
       bullet.zPosition = 20
@@ -177,7 +178,7 @@
     private func shootEnemyBullet() {
       guard !self.isEnded else { return }
 
-      let bullet = SKSpriteNode(imageNamed: "bullet_red")
+      let bullet = SKSpriteNode(asset: Asset.Items.Bullets.bulletRed)
       bullet.name = NodeName.enemyBullet
       bullet.setScale(0.125)
       bullet.zPosition = 20

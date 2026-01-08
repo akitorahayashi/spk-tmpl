@@ -12,14 +12,21 @@ This is an iOS SpriteKit game template built with SwiftUI and The Composable Arc
 - **Navigation** follows delegate-driven transitions with enum-based app state
 
 ### Package Structure
-- `App/`: Application shell with resources and dependency bootstrap
+- `App/`: Application shell with resources (AppIcon) and dependency bootstrap
 - `Packages/`: Local Swift package containing feature modules
   - `AppFeature/`: Root routing hub with enum state (home/game)
   - `HomeFeature/`: Title screen with start trigger and delegate pattern
   - `GameFeature/`: Pure gameplay logic with kill tracking and delegate notifications
+  - `SharedResources/`: Centralized asset management with SwiftGen-generated type-safe accessors
 - `Tests/Unit/`: Unit tests for app-level code
 - `Tests/Intg/`: Integration tests with dependency overrides
 - `Tests/UI/`: Black-box UI tests
+
+### Asset Management
+Assets are managed via the `SharedResources` SPM module. SwiftGen generates type-safe Swift code from `Media.xcassets`.
+- Assets: `Packages/Packages/SharedResources/Sources/SharedResources/Resources/Media.xcassets`
+- Generated code: `Packages/Packages/SharedResources/Sources/SharedResources/Generated/` (git-ignored)
+- Run `just gen-as` to regenerate asset code after modifying assets
 
 ### Module Conventions
 Each feature follows a Domain/UI split:
@@ -106,11 +113,13 @@ Update the package name and all target/product names.
 
 | Command | Description |
 |---|---|
-| `just setup` | Initialize project: install dependencies and generate project |
+| `just setup` | Initialize project: install dependencies and generate all code |
+| `just gen` | Run all code generation (assets + Xcode project) |
+| `just gen-as` | Generate asset Swift code using SwiftGen |
 | `just gen-pj` | Regenerate Xcode project from templates |
 | `just check` | Format and lint code |
 | `just test` | Run all tests (package + Xcode) |
-| `just package-test` | Run Swift package tests only |
+| `just pkg-test` | Run Swift package tests only |
 | `just unit-test` | Run Xcode unit tests |
 | `just intg-test` | Run integration tests |
 | `just ui-test` | Run UI tests |
