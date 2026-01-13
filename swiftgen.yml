@@ -1,5 +1,5 @@
-input_dir: Packages/Packages/SharedResources/Sources/SharedResources/Resources
-output_dir: Packages/Packages/SharedResources/Sources/SharedResources/Generated
+input_dir: Packages/SharedResources/Sources/SharedResources/Resources
+output_dir: Packages/SharedResources/Sources/SharedResources/Generated
 
 xcassets:
   inputs: Media.xcassets
