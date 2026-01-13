@@ -36,10 +36,6 @@
 
     private func createScene(size: CGSize) {
       let newScene = GameScene.create(size: size)
-      // TODO: For template users - Rename GameScene callbacks to match your game domain
-      // (e.g., onPointScored, onCoinCollected, onPlayerDied)
-      // These placeholder names (onPlayerKilledEnemy, onPlayerWasHit) are from the
-      // original shooting game example and should be customized.
       newScene.onPlayerKilledEnemy = {
         self.store.send(.scoreIncremented(amount: 1))
       }

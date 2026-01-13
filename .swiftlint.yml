@@ -29,6 +29,7 @@ excluded:
   - xcbuild
   - references
   - reference
+  - "**/Generated/**"
 
 #-------------------------------------------------------------------
 # Rule Configuration
