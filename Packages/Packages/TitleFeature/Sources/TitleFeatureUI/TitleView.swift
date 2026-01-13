@@ -13,12 +13,8 @@
 
     public var body: some View {
       ZStack {
-        LinearGradient(
-          gradient: Gradient(colors: [.black, .purple.opacity(0.6)]),
-          startPoint: .top,
-          endPoint: .bottom
-        )
-        .ignoresSafeArea()
+        Color.black
+          .ignoresSafeArea()
 
         VStack(spacing: 40) {
           Text("SPACE BATTLE")
