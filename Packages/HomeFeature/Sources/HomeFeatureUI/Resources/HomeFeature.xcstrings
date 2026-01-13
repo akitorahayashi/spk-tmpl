@@ -1,0 +1,42 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "homeTitle": {
+      "comment": "Home screen title heading.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HOME"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ホーム"
+          }
+        }
+      }
+    },
+    "startMissionButton": {
+      "comment": "Home screen button to start the mission.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start Mission"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ミッションを開始"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

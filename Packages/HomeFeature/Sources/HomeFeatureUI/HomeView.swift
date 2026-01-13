@@ -1,6 +1,7 @@
 #if canImport(UIKit)
   import ComposableArchitecture
   import HomeFeatureCore
+  import SharedResources
   import SwiftUI
 
   /// The home screen view displaying the game title and start prompt.
@@ -17,11 +18,11 @@
           .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          Text("HOME")
+          Text(String(localized: .homeTitle, bundle: .module))
             .font(.system(size: 48, weight: .bold, design: .default))
             .foregroundColor(.white)
 
-          Text("Start Mission")
+          Text(String(localized: .startMissionButton, bundle: .module))
             .font(.system(size: 24, weight: .bold))
             .foregroundColor(.yellow)
             .opacity(self.store.pulseOpacity)
