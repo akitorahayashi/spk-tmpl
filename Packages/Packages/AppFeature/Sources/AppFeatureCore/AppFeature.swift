@@ -3,6 +3,7 @@ import Dependencies
 import Foundation
 import GameFeatureCore
 import HomeFeatureCore
+import TitleFeatureCore
 
 /// The root feature that provides routing between Home and Game screens.
 ///
@@ -14,6 +15,9 @@ public struct AppFeature: Sendable {
 
   @ObservableState
   public enum State: Equatable, Sendable {
+    /// The title splash is displayed.
+    case title(TitleFeature.State)
+
     /// The home screen is displayed.
     case home(HomeFeature.State)
 
@@ -21,11 +25,12 @@ public struct AppFeature: Sendable {
     case game(GameFeature.State)
 
     public init() {
-      self = .home(HomeFeature.State())
+      self = .title(TitleFeature.State())
     }
   }
 
   public enum Action: Equatable, Sendable {
+    case title(TitleFeature.Action)
     case home(HomeFeature.Action)
     case game(GameFeature.Action)
     case onAppear
@@ -34,6 +39,13 @@ public struct AppFeature: Sendable {
   public var body: some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
+        case .title(.delegate(.startGame)):
+          state = .home(HomeFeature.State())
+          return .none
+
+        case .title:
+          return .none
+
         case .home(.delegate(.startGame)):
           // Inject the game rule for the level.
           // Template users can customize this to create different game modes.
@@ -58,6 +70,9 @@ public struct AppFeature: Sendable {
         case .onAppear:
           return .none
       }
+    }
+    .ifCaseLet(\.title, action: \.title) {
+      TitleFeature()
     }
     .ifCaseLet(\.home, action: \.home) {
       HomeFeature()

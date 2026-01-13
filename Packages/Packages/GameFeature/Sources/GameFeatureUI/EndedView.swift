@@ -17,11 +17,11 @@
           .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          Text(self.store.result == .won ? "YOU WIN!" : "GAME OVER")
+          Text(localizable: self.store.result == .won ? .gameResultWinTitle : .gameResultLoseTitle)
             .font(.system(size: 48, weight: .bold, design: .default))
             .foregroundColor(self.store.result == .won ? .green : .red)
 
-          Text("Tap to Continue")
+          Text(localizable: .tapToContinueCta)
             .font(.system(size: 24, weight: .bold))
             .foregroundColor(.white)
         }
