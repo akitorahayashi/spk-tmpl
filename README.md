@@ -1,6 +1,6 @@
 ## Overview
 
-This is an iOS SpriteKit game template built with SwiftUI and The Composable Architecture (TCA). The app features state-driven routing between Home and Game screens using an enum-based app state for exclusive transitions.
+This is an iOS SpriteKit game template built with SwiftUI and The Composable Architecture (TCA). The app features state-driven routing between Title, Home, and Game screens using an enum-based app state for exclusive transitions.
 
 ## Architecture
 
@@ -14,8 +14,9 @@ This is an iOS SpriteKit game template built with SwiftUI and The Composable Arc
 ### Package Structure
 - `App/`: Application shell with resources (AppIcon) and dependency bootstrap
 - `Packages/`: Local Swift package containing feature modules
-  - `AppFeature/`: Root routing hub with enum state (home/game)
-  - `HomeFeature/`: Title screen with start trigger and delegate pattern
+  - `AppFeature/`: Root routing hub with enum state (title/home/game)
+  - `TitleFeature/`: Title splash with tap-to-start flow that transitions into the menu
+  - `HomeFeature/`: Main menu with start trigger and delegate pattern
   - `GameFeature/`: Pure gameplay logic with kill tracking and delegate notifications
   - `SharedResources/`: Centralized asset management with SwiftGen-generated type-safe accessors
 - `Tests/Unit/`: Unit tests for app-level code
@@ -27,6 +28,12 @@ Assets are managed via the `SharedResources` SPM module. SwiftGen generates type
 - Assets: `Packages/Packages/SharedResources/Sources/SharedResources/Resources/Media.xcassets`
 - Generated code: `Packages/Packages/SharedResources/Sources/SharedResources/Generated/` (git-ignored)
 - Run `just gen-as` to regenerate asset code after modifying assets
+- SpriteKit textures are instantiated through `SKSpriteNode(asset:)`, which feeds `SpriteKitTextureCache` for automatic reuse and type safety.
+
+### Localization
+- Feature UI targets ship `.xcstrings` catalogs that compile through `xcstrings-tool-plugin` for type-safe accessors.
+- `Text(localizable:)` or `LocalizedStringResource(localizable:)` supplies every player-facing string, with literal `Text("...")` reserved for debugging contexts.
+- `en` and `ja` translations ship in each catalog so localization regressions surface during builds.
 
 ### Module Conventions
 Each feature follows a Domain/UI split:

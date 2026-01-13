@@ -123,6 +123,14 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 - SpriteKit handles physics and frame-based behavior
 - GameFeature manages gameplay state; AppFeature manages navigation
 
+### SpriteKit Asset Loading
+- SpriteKit textures are resolved through `SpriteKitTextureCache`, and nodes use the `SKSpriteNode(asset:)` initializer (or request textures from the cache directly) so assets stay type-safe and cached.
+- Direct string-based SpriteKit initializers such as `SKSpriteNode(imageNamed:)` or `SKTexture(imageNamed:)` are not used.
+
+### Localization
+- All player-facing copy resides in `.xcstrings` catalogs that get compiled per feature via `xcstrings-tool-plugin`.
+- SwiftUI views use `Text(localizable:)` (or the generated helpers) instead of string literals so compile-time checking catches missing keys.
+
 ### Platform-Specific Code & Package Tests
 - **UI targets contain iOS-only code** (UIKit, UIViewRepresentable, UITouch)
 - **Test targets depend only on Core targets**, never on UI targets

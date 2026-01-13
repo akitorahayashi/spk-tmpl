@@ -6,6 +6,8 @@
   import HomeFeatureCore
   import HomeFeatureUI
   import SwiftUI
+  import TitleFeatureCore
+  import TitleFeatureUI
 
   /// The root view of the application, hosting the app feature with routing.
   public struct ContentView: View {
@@ -18,6 +20,10 @@
     public var body: some View {
       SwitchStore(self.store) { state in
         switch state {
+          case .title:
+            CaseLet(\AppFeature.State.title, action: AppFeature.Action.title) { titleStore in
+              TitleView(store: titleStore)
+            }
           case .home:
             CaseLet(\AppFeature.State.home, action: AppFeature.Action.home) { homeStore in
               HomeView(store: homeStore)
@@ -48,6 +54,14 @@
   }
 
   #if DEBUG
+    #Preview("Title") {
+      ContentView(
+        store: Store(initialState: AppFeature.State.title(TitleFeature.State())) {
+          AppFeature()
+        }
+      )
+    }
+
     #Preview("Home") {
       ContentView(
         store: Store(initialState: AppFeature.State.home(HomeFeature.State())) {

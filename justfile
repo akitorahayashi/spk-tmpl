@@ -195,6 +195,7 @@ clean:
 
 # Run all tests (unit, integration, UI, and package tests)
 test:
+    @just gen
     @just pkg-test
     @just fastlane::test-all
 

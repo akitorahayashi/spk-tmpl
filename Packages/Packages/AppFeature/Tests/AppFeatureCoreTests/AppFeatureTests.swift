@@ -1,6 +1,7 @@
 import ComposableArchitecture
 import GameFeatureCore
 import HomeFeatureCore
+import TitleFeatureCore
 import XCTest
 
 @testable import AppFeatureCore
@@ -9,12 +10,28 @@ import XCTest
 final class AppFeatureTests: XCTestCase {
   func testInitialState() {
     let state = AppFeature.State()
-    XCTAssertEqual(state, .home(HomeFeature.State()))
+    XCTAssertEqual(state, .title(TitleFeature.State()))
+  }
+
+  func testTitleToHomeTransition() async {
+    let store = TestStore(initialState: AppFeature.State.title(TitleFeature.State())) {
+      AppFeature()
+    }
+
+    await store.send(.title(.startTapped))
+    await store.receive(.title(.delegate(.startGame))) {
+      $0 = .home(HomeFeature.State())
+    }
   }
 
   func testHomeToGameTransition() async {
     let store = TestStore(initialState: AppFeature.State()) {
       AppFeature()
+    }
+
+    await store.send(.title(.startTapped))
+    await store.receive(.title(.delegate(.startGame))) {
+      $0 = .home(HomeFeature.State())
     }
 
     await store.send(.home(.startTapped))

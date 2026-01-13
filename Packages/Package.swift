@@ -3,11 +3,16 @@ import PackageDescription
 
 let package = Package(
   name: "Packages",
+  defaultLocalization: "en",
   platforms: [.iOS(.v17), .macOS(.v14)],
   products: [
     // App Feature
     .library(name: "AppFeatureCore", targets: ["AppFeatureCore"]),
     .library(name: "AppFeatureUI", targets: ["AppFeatureUI"]),
+
+    // Title Feature
+    .library(name: "TitleFeatureCore", targets: ["TitleFeatureCore"]),
+    .library(name: "TitleFeatureUI", targets: ["TitleFeatureUI"]),
 
     // Home Feature
     .library(name: "HomeFeatureCore", targets: ["HomeFeatureCore"]),
@@ -35,6 +40,7 @@ let package = Package(
     .target(
       name: "AppFeatureCore",
       dependencies: [
+        "TitleFeatureCore",
         "HomeFeatureCore",
         "GameFeatureCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -54,6 +60,7 @@ let package = Package(
       name: "AppFeatureUI",
       dependencies: [
         "AppFeatureCore",
+        "TitleFeatureUI",
         "HomeFeatureUI",
         "GameFeatureUI",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -68,6 +75,32 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
       ],
       path: "Packages/AppFeature/Tests/AppFeatureCoreTests"
+    ),
+
+    // MARK: - Title Feature
+
+    .target(
+      name: "TitleFeatureCore",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ],
+      path: "Packages/TitleFeature/Sources/TitleFeatureCore"
+    ),
+    .target(
+      name: "TitleFeatureUI",
+      dependencies: [
+        "TitleFeatureCore",
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ],
+      path: "Packages/TitleFeature/Sources/TitleFeatureUI"
+    ),
+    .testTarget(
+      name: "TitleFeatureCoreTests",
+      dependencies: [
+        "TitleFeatureCore",
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ],
+      path: "Packages/TitleFeature/Tests/TitleFeatureCoreTests"
     ),
 
     // MARK: - Home Feature

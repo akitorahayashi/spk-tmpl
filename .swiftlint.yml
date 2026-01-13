@@ -11,6 +11,7 @@
 # Paths to include in linting
 included:
   - App/**/*.swift
+  - Packages/**/*.swift
   - Tests/**/*.swift
 
 #-------------------------------------------------------------------
@@ -28,6 +29,7 @@ excluded:
   - xcbuild
   - references
   - reference
+  - "**/Generated/**"
 
 #-------------------------------------------------------------------
 # Rule Configuration

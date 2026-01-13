@@ -14,7 +14,6 @@
 --exclude **/.swiftpm
 --exclude DerivedData
 --exclude fastlane
---exclude references
 --exclude reference
 --exclude .git
 --exclude build

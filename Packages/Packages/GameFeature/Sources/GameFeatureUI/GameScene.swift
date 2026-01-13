@@ -207,16 +207,16 @@
     public func didBegin(_ contact: SKPhysicsContact) {
       guard !self.isEnded else { return }
 
-      let a = contact.bodyA
-      let b = contact.bodyB
+      let bodyA = contact.bodyA
+      let bodyB = contact.bodyB
 
       // Player bullet vs enemy
       if
-        (a.categoryBitMask == PhysicsCategory.playerBullet && b.categoryBitMask == PhysicsCategory.enemy) ||
-        (b.categoryBitMask == PhysicsCategory.playerBullet && a.categoryBitMask == PhysicsCategory.enemy)
+        (bodyA.categoryBitMask == PhysicsCategory.playerBullet && bodyB.categoryBitMask == PhysicsCategory.enemy) ||
+        (bodyB.categoryBitMask == PhysicsCategory.playerBullet && bodyA.categoryBitMask == PhysicsCategory.enemy)
       {
-        let bulletNode = (a.categoryBitMask == PhysicsCategory.playerBullet ? a.node : b.node)
-        let enemyNode = (a.categoryBitMask == PhysicsCategory.enemy ? a.node : b.node)
+        let bulletNode = (bodyA.categoryBitMask == PhysicsCategory.playerBullet ? bodyA.node : bodyB.node)
+        let enemyNode = (bodyA.categoryBitMask == PhysicsCategory.enemy ? bodyA.node : bodyB.node)
 
         bulletNode?.removeFromParent()
         enemyNode?.removeFromParent()
@@ -228,10 +228,10 @@
 
       // Enemy bullet vs player
       if
-        (a.categoryBitMask == PhysicsCategory.enemyBullet && b.categoryBitMask == PhysicsCategory.player) ||
-        (b.categoryBitMask == PhysicsCategory.enemyBullet && a.categoryBitMask == PhysicsCategory.player)
+        (bodyA.categoryBitMask == PhysicsCategory.enemyBullet && bodyB.categoryBitMask == PhysicsCategory.player) ||
+        (bodyB.categoryBitMask == PhysicsCategory.enemyBullet && bodyA.categoryBitMask == PhysicsCategory.player)
       {
-        let bulletNode = (a.categoryBitMask == PhysicsCategory.enemyBullet ? a.node : b.node)
+        let bulletNode = (bodyA.categoryBitMask == PhysicsCategory.enemyBullet ? bodyA.node : bodyB.node)
         bulletNode?.removeFromParent()
 
         self.endGame()

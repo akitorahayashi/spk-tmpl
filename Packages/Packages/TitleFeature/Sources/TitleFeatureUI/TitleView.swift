@@ -1,35 +1,40 @@
 #if canImport(UIKit)
   import ComposableArchitecture
-  import HomeFeatureCore
   import SwiftUI
+  import TitleFeatureCore
 
-  /// The home screen view displaying the game title and start prompt.
-  public struct HomeView: View {
-    @Bindable var store: StoreOf<HomeFeature>
+  /// Simple title splash sequence that funnels the player toward the home menu.
+  public struct TitleView: View {
+    @Bindable var store: StoreOf<TitleFeature>
 
-    public init(store: StoreOf<HomeFeature>) {
+    public init(store: StoreOf<TitleFeature>) {
       self.store = store
     }
 
     public var body: some View {
       ZStack {
-        Color.black
-          .ignoresSafeArea()
+        LinearGradient(
+          gradient: Gradient(colors: [.black, .purple.opacity(0.6)]),
+          startPoint: .top,
+          endPoint: .bottom
+        )
+        .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          Text("HOME")
+          Text("SPACE BATTLE")
             .font(.system(size: 48, weight: .bold, design: .default))
-            .foregroundColor(.white)
+            .foregroundStyle(.white)
 
-          Text("Start Mission")
+          Text("Tap to Start")
             .font(.system(size: 24, weight: .bold))
-            .foregroundColor(.yellow)
+            .foregroundStyle(.yellow)
             .opacity(self.store.pulseOpacity)
             .animation(
               .easeInOut(duration: 0.8).repeatForever(autoreverses: true),
               value: self.store.pulseOpacity
             )
         }
+        .padding(.horizontal, 24)
       }
       .contentShape(Rectangle())
       .onTapGesture {
@@ -43,9 +48,9 @@
 
   #if DEBUG
     #Preview {
-      HomeView(
-        store: Store(initialState: HomeFeature.State()) {
-          HomeFeature()
+      TitleView(
+        store: Store(initialState: TitleFeature.State()) {
+          TitleFeature()
         }
       )
     }

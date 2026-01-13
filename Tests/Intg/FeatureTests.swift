@@ -2,6 +2,7 @@ import AppFeatureCore
 import ComposableArchitecture
 import GameFeatureCore
 import HomeFeatureCore
+import TitleFeatureCore
 import XCTest
 
 @testable import TemplateApp
@@ -9,20 +10,20 @@ import XCTest
 @MainActor
 final class FeatureTests: XCTestCase {
   func testAppFeatureInitialState() {
-    // Goal: Verify that the app feature starts with home state.
+    // Goal: Verify that the app feature starts with title state.
     let state = AppFeature.State()
-    XCTAssertEqual(state, .home(HomeFeature.State()))
+    XCTAssertEqual(state, .title(TitleFeature.State()))
   }
 
-  func testAppFeatureHomeToGameTransition() async {
-    // Goal: Verify home -> game transition via delegate action.
+  func testAppFeatureTitleToHomeTransition() async {
+    // Goal: Verify title -> home transition via delegate action.
     let store = TestStore(initialState: AppFeature.State()) {
       AppFeature()
     }
 
-    await store.send(.home(.startTapped))
-    await store.receive(.home(.delegate(.startGame))) {
-      $0 = .game(GameFeature.State(rule: .defaultRule))
+    await store.send(.title(.startTapped))
+    await store.receive(.title(.delegate(.startGame))) {
+      $0 = .home(HomeFeature.State())
     }
   }
 
@@ -65,7 +66,13 @@ final class FeatureTests: XCTestCase {
       AppFeature()
     }
 
-    // Start game from home
+    // Title -> Home
+    await store.send(.title(.startTapped))
+    await store.receive(.title(.delegate(.startGame))) {
+      $0 = .home(HomeFeature.State())
+    }
+
+    // Home -> Game
     await store.send(.home(.startTapped))
     await store.receive(.home(.delegate(.startGame))) {
       $0 = .game(GameFeature.State(rule: .defaultRule))
@@ -97,7 +104,13 @@ final class FeatureTests: XCTestCase {
       AppFeature()
     }
 
-    // Start game from home
+    // Title -> Home
+    await store.send(.title(.startTapped))
+    await store.receive(.title(.delegate(.startGame))) {
+      $0 = .home(HomeFeature.State())
+    }
+
+    // Home -> Game
     await store.send(.home(.startTapped))
     await store.receive(.home(.delegate(.startGame))) {
       $0 = .game(GameFeature.State(rule: .defaultRule))
