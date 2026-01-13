@@ -91,10 +91,10 @@ final class FeatureTests: XCTestCase {
     }
     await store.receive(.game(.delegate(.gameEnded(.won))))
 
-    // Continue to return to title
+    // Continue to return to home
     await store.send(.game(.continueTapped))
     await store.receive(.game(.delegate(.returnToHome))) {
-      $0 = .title(TitleFeature.State())
+      $0 = .home(HomeFeature.State())
     }
   }
 
@@ -127,10 +127,10 @@ final class FeatureTests: XCTestCase {
     }
     await store.receive(.game(.delegate(.gameEnded(.lost))))
 
-    // Continue to return to title
+    // Continue to return to home
     await store.send(.game(.continueTapped))
     await store.receive(.game(.delegate(.returnToHome))) {
-      $0 = .title(TitleFeature.State())
+      $0 = .home(HomeFeature.State())
     }
   }
 }
