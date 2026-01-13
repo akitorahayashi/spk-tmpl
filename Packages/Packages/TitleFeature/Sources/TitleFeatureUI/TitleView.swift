@@ -21,11 +21,11 @@
         .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          Text(localizable: .gameTitleText)
+          Text("SPACE BATTLE")
             .font(.system(size: 48, weight: .bold, design: .default))
             .foregroundStyle(.white)
 
-          Text(localizable: .tapToStartCta)
+          Text("Tap to Start")
             .font(.system(size: 24, weight: .bold))
             .foregroundStyle(.yellow)
             .opacity(self.store.pulseOpacity)

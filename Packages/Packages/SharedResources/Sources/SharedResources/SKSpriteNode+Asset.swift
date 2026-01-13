@@ -9,9 +9,4 @@
     }
   }
 
-  public extension SKTexture {
-    convenience init(asset: ImageAsset) {
-      self.init(image: asset.image)
-    }
-  }
 #endif

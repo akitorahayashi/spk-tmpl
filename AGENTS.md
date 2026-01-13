@@ -124,7 +124,7 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 - GameFeature manages gameplay state; AppFeature manages navigation
 
 ### SpriteKit Asset Loading
-- SpriteKit textures are resolved through `SpriteKitTextureCache`, and nodes use the `SKSpriteNode(asset:)`/`SKTexture(asset:)` initializers so assets stay type-safe and cached.
+- SpriteKit textures are resolved through `SpriteKitTextureCache`, and nodes use the `SKSpriteNode(asset:)` initializer (or request textures from the cache directly) so assets stay type-safe and cached.
 - Direct string-based SpriteKit initializers such as `SKSpriteNode(imageNamed:)` or `SKTexture(imageNamed:)` are not used.
 
 ### Localization

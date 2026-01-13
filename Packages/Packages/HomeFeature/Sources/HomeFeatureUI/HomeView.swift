@@ -17,11 +17,11 @@
           .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          Text(localizable: .homeHeading)
+          Text("HOME")
             .font(.system(size: 48, weight: .bold, design: .default))
             .foregroundColor(.white)
 
-          Text(localizable: .startMissionCta)
+          Text("Start Mission")
             .font(.system(size: 24, weight: .bold))
             .foregroundColor(.yellow)
             .opacity(self.store.pulseOpacity)
