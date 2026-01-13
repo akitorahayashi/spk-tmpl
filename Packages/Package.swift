@@ -54,7 +54,7 @@ let package = Package(
         .product(name: "Perception", package: "swift-perception"),
         .product(name: "PerceptionCore", package: "swift-perception"),
       ],
-      path: "Packages/AppFeature/Sources/AppFeatureCore"
+      path: "AppFeature/Sources/AppFeatureCore"
     ),
     .target(
       name: "AppFeatureUI",
@@ -65,7 +65,7 @@ let package = Package(
         "GameFeatureUI",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "Packages/AppFeature/Sources/AppFeatureUI"
+      path: "AppFeature/Sources/AppFeatureUI"
     ),
     .testTarget(
       name: "AppFeatureCoreTests",
@@ -74,7 +74,7 @@ let package = Package(
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
       ],
-      path: "Packages/AppFeature/Tests/AppFeatureCoreTests"
+      path: "AppFeature/Tests/AppFeatureCoreTests"
     ),
 
     // MARK: - Title Feature
@@ -84,7 +84,7 @@ let package = Package(
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "Packages/TitleFeature/Sources/TitleFeatureCore"
+      path: "TitleFeature/Sources/TitleFeatureCore"
     ),
     .target(
       name: "TitleFeatureUI",
@@ -92,7 +92,7 @@ let package = Package(
         "TitleFeatureCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "Packages/TitleFeature/Sources/TitleFeatureUI"
+      path: "TitleFeature/Sources/TitleFeatureUI"
     ),
     .testTarget(
       name: "TitleFeatureCoreTests",
@@ -100,7 +100,7 @@ let package = Package(
         "TitleFeatureCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "Packages/TitleFeature/Tests/TitleFeatureCoreTests"
+      path: "TitleFeature/Tests/TitleFeatureCoreTests"
     ),
 
     // MARK: - Home Feature
@@ -111,7 +111,7 @@ let package = Package(
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
       ],
-      path: "Packages/HomeFeature/Sources/HomeFeatureCore"
+      path: "HomeFeature/Sources/HomeFeatureCore"
     ),
     .target(
       name: "HomeFeatureUI",
@@ -119,7 +119,7 @@ let package = Package(
         "HomeFeatureCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "Packages/HomeFeature/Sources/HomeFeatureUI"
+      path: "HomeFeature/Sources/HomeFeatureUI"
     ),
     .testTarget(
       name: "HomeFeatureCoreTests",
@@ -127,7 +127,7 @@ let package = Package(
         "HomeFeatureCore",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "Packages/HomeFeature/Tests/HomeFeatureCoreTests"
+      path: "HomeFeature/Tests/HomeFeatureCoreTests"
     ),
 
     // MARK: - Game Feature
@@ -140,7 +140,7 @@ let package = Package(
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
         .product(name: "Clocks", package: "swift-clocks"),
       ],
-      path: "Packages/GameFeature/Sources/GameFeatureCore"
+      path: "GameFeature/Sources/GameFeatureCore"
     ),
     .target(
       name: "GameFeatureUI",
@@ -149,7 +149,7 @@ let package = Package(
         "SharedResources",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "Packages/GameFeature/Sources/GameFeatureUI"
+      path: "GameFeature/Sources/GameFeatureUI"
     ),
     .testTarget(
       name: "GameFeatureCoreTests",
@@ -158,7 +158,7 @@ let package = Package(
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Dependencies", package: "swift-dependencies"),
       ],
-      path: "Packages/GameFeature/Tests/GameFeatureCoreTests"
+      path: "GameFeature/Tests/GameFeatureCoreTests"
     ),
 
     // MARK: - Shared Resources
@@ -166,7 +166,7 @@ let package = Package(
     .target(
       name: "SharedResources",
       dependencies: [],
-      path: "Packages/SharedResources/Sources/SharedResources",
+      path: "SharedResources/Sources/SharedResources",
       resources: [
         .process("Resources"),
       ]
