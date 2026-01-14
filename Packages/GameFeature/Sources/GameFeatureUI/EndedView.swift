@@ -17,12 +17,15 @@
           .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          let resultTitle: LocalizedStringResource =
-            self.store.result == .won ? .victoryTitle : .gameOverTitle
-
-          Text(resultTitle)
-          .font(.system(size: 48, weight: .bold, design: .default))
-          .foregroundColor(self.store.result == .won ? .green : .red)
+          if self.store.result == .won {
+            Text(.victoryTitle)
+              .font(.system(size: 48, weight: .bold, design: .default))
+              .foregroundColor(.green)
+          } else {
+            Text(.gameOverTitle)
+              .font(.system(size: 48, weight: .bold, design: .default))
+              .foregroundColor(.red)
+          }
 
           Text(.tapToContinue)
             .font(.system(size: 24, weight: .bold))
