@@ -17,11 +17,12 @@
           .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          Text(String(localized: "gameTitleText", bundle: .module))
+          Text(.gameTitleText)
             .font(.system(size: 48, weight: .bold, design: .default))
             .foregroundStyle(.white)
+            .accessibilityIdentifier("title.gameTitle")
 
-          Text(String(localized: "tapToStartCta", bundle: .module))
+          Text(.tapToStartCta)
             .font(.system(size: 24, weight: .bold))
             .foregroundStyle(.yellow)
             .opacity(self.store.pulseOpacity)
@@ -29,6 +30,7 @@
               .easeInOut(duration: 0.8).repeatForever(autoreverses: true),
               value: self.store.pulseOpacity
             )
+            .accessibilityIdentifier("title.tapToStart")
         }
         .padding(.horizontal, 24)
       }

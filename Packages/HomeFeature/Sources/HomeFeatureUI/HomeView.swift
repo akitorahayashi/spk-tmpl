@@ -17,11 +17,12 @@
           .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          Text(String(localized: "homeTitle", bundle: .module))
+          Text(.homeTitle)
             .font(.system(size: 48, weight: .bold, design: .default))
             .foregroundColor(.white)
+            .accessibilityIdentifier("home.title")
 
-          Text(String(localized: "startMissionButton", bundle: .module))
+          Text(.startMissionButton)
             .font(.system(size: 24, weight: .bold))
             .foregroundColor(.yellow)
             .opacity(self.store.pulseOpacity)
@@ -29,6 +30,7 @@
               .easeInOut(duration: 0.8).repeatForever(autoreverses: true),
               value: self.store.pulseOpacity
             )
+            .accessibilityIdentifier("home.startMission")
         }
       }
       .contentShape(Rectangle())

@@ -19,26 +19,26 @@ final class TemplateAppUITests: XCTestCase {
 
   func testAppLaunchesToTitleScreen() throws {
     // Verify title screen elements are present
-    let titleLabel = self.app.staticTexts["SPACE BATTLE"]
+    let titleLabel = self.app.staticTexts["title.gameTitle"]
     XCTAssertTrue(titleLabel.waitForExistence(timeout: 3))
 
-    let startLabel = self.app.staticTexts["Tap to Start"]
+    let startLabel = self.app.staticTexts["title.tapToStart"]
     XCTAssertTrue(startLabel.exists)
   }
 
   func testTapToStartTransitionsToHome() throws {
     // Wait for title screen
-    let startLabel = self.app.staticTexts["Tap to Start"]
+    let startLabel = self.app.staticTexts["title.tapToStart"]
     XCTAssertTrue(startLabel.waitForExistence(timeout: 3))
 
     // Tap the "Tap to Start" label to transition to home
     startLabel.tap()
 
     // Verify home screen appears
-    let homeTitleLabel = self.app.staticTexts["HOME"]
+    let homeTitleLabel = self.app.staticTexts["home.title"]
     XCTAssertTrue(homeTitleLabel.waitForExistence(timeout: 3))
 
-    let homeStartLabel = self.app.staticTexts["Start Mission"]
+    let homeStartLabel = self.app.staticTexts["home.startMission"]
     XCTAssertTrue(homeStartLabel.exists)
   }
 }
