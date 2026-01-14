@@ -18,16 +18,16 @@
 
         VStack(spacing: 40) {
           if self.store.result == .won {
-            Text(.victoryTitle)
+            Text(String(localized: "victoryTitle", bundle: .module))
               .font(.system(size: 48, weight: .bold, design: .default))
               .foregroundColor(.green)
           } else {
-            Text(.gameOverTitle)
+            Text(String(localized: "gameOverTitle", bundle: .module))
               .font(.system(size: 48, weight: .bold, design: .default))
               .foregroundColor(.red)
           }
 
-          Text(.tapToContinue)
+          Text(String(localized: "tapToContinue", bundle: .module))
             .font(.system(size: 24, weight: .bold))
             .foregroundColor(.white)
         }

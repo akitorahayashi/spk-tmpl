@@ -146,13 +146,16 @@ String Catalogs (`.xcstrings`) with `STRING_CATALOG_GENERATE_SYMBOLS` enabled. T
 1. Open: `Packages/<Feature>/Sources/<Feature>UI/Resources/Localizable.xcstrings`
 2. Add key with `"extractionState": "manual"` and `en`/`ja` translations
 3. Build — symbol is generated
-4. Use: `Text(.yourNewKey)` or `String(localized: .yourNewKey)`
+4. Use: `Text(.yourNewKey)`
 
-**Usage:**
+**Usage (hybrid approach):**
 ```swift
-Text(.homeTitle)                        // SwiftUI
-String(localized: .gameOverTitle)       // String conversion
-let t: LocalizedStringResource = cond ? .a : .b  // Ternary
+// Default: type-safe symbols
+Text(.homeTitle)
+Button(.done) { ... }
+
+// Fallback: for if-else branches or compile errors
+Text(String(localized: "victoryTitle", bundle: .module))
 ```
 
 **Requirements:** File named `Localizable.xcstrings`, camelCase keys, `extractionState: "manual"`. Languages: en, ja.
