@@ -17,11 +17,17 @@
           .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          Text(self.store.result == .won ? "YOU WIN!" : "GAME OVER")
-            .font(.system(size: 48, weight: .bold, design: .default))
-            .foregroundColor(self.store.result == .won ? .green : .red)
+          if self.store.result == .won {
+            Text(String(localized: "victoryTitle", bundle: .module))
+              .font(.system(size: 48, weight: .bold, design: .default))
+              .foregroundColor(.green)
+          } else {
+            Text(String(localized: "gameOverTitle", bundle: .module))
+              .font(.system(size: 48, weight: .bold, design: .default))
+              .foregroundColor(.red)
+          }
 
-          Text("Tap to Continue")
+          Text(String(localized: "tapToContinue", bundle: .module))
             .font(.system(size: 24, weight: .bold))
             .foregroundColor(.white)
         }

@@ -7,38 +7,38 @@ final class TemplateAppUITests: XCTestCase {
   override func setUpWithError() throws {
     try super.setUpWithError()
     continueAfterFailure = false
-    app = XCUIApplication()
-    app.launch()
-    XCTAssertTrue(app.wait(for: .runningForeground, timeout: 5))
+    self.app = XCUIApplication()
+    self.app.launch()
+    XCTAssertTrue(self.app.wait(for: .runningForeground, timeout: 5))
   }
 
   override func tearDownWithError() throws {
-    app = nil
+    self.app = nil
     try super.tearDownWithError()
   }
 
   func testAppLaunchesToTitleScreen() throws {
     // Verify title screen elements are present
-    let titleLabel = app.staticTexts["SPACE BATTLE"]
+    let titleLabel = self.app.staticTexts["title.gameTitle"]
     XCTAssertTrue(titleLabel.waitForExistence(timeout: 3))
 
-    let startLabel = app.staticTexts["Tap to Start"]
+    let startLabel = self.app.staticTexts["title.tapToStart"]
     XCTAssertTrue(startLabel.exists)
   }
 
   func testTapToStartTransitionsToHome() throws {
     // Wait for title screen
-    let startLabel = app.staticTexts["Tap to Start"]
+    let startLabel = self.app.staticTexts["title.tapToStart"]
     XCTAssertTrue(startLabel.waitForExistence(timeout: 3))
 
     // Tap the "Tap to Start" label to transition to home
     startLabel.tap()
 
     // Verify home screen appears
-    let homeTitleLabel = app.staticTexts["HOME"]
+    let homeTitleLabel = self.app.staticTexts["home.title"]
     XCTAssertTrue(homeTitleLabel.waitForExistence(timeout: 3))
 
-    let homeStartLabel = app.staticTexts["Start Mission"]
+    let homeStartLabel = self.app.staticTexts["home.startMission"]
     XCTAssertTrue(homeStartLabel.exists)
   }
 }

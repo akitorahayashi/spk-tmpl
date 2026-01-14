@@ -90,9 +90,11 @@ let package = Package(
       name: "TitleFeatureUI",
       dependencies: [
         "TitleFeatureCore",
+        "SharedResources",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "TitleFeature/Sources/TitleFeatureUI"
+      path: "TitleFeature/Sources/TitleFeatureUI",
+      resources: [.process("Resources")]
     ),
     .testTarget(
       name: "TitleFeatureCoreTests",
@@ -117,9 +119,11 @@ let package = Package(
       name: "HomeFeatureUI",
       dependencies: [
         "HomeFeatureCore",
+        "SharedResources",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "HomeFeature/Sources/HomeFeatureUI"
+      path: "HomeFeature/Sources/HomeFeatureUI",
+      resources: [.process("Resources")]
     ),
     .testTarget(
       name: "HomeFeatureCoreTests",
@@ -149,7 +153,8 @@ let package = Package(
         "SharedResources",
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
-      path: "GameFeature/Sources/GameFeatureUI"
+      path: "GameFeature/Sources/GameFeatureUI",
+      resources: [.process("Resources")]
     ),
     .testTarget(
       name: "GameFeatureCoreTests",

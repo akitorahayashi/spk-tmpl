@@ -138,6 +138,28 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 - `swift test --filter` runs Core tests on macOS without building iOS-specific UI code
 - This pattern enables `just package-test` to validate reducers on any platform
 
+### Localization Workflow
+
+String Catalogs (`.xcstrings`) with `STRING_CATALOG_GENERATE_SYMBOLS` enabled. Type-safe symbols are auto-generated.
+
+**Adding a new localized string:**
+1. Open: `Packages/<Feature>/Sources/<Feature>UI/Resources/Localizable.xcstrings`
+2. Add key with `"extractionState": "manual"` and `en`/`ja` translations
+3. Build — symbol is generated
+4. Use: `Text(.yourNewKey)`
+
+**Usage (hybrid approach):**
+```swift
+// Default: type-safe symbols
+Text(.homeTitle)
+Button(.done) { ... }
+
+// Fallback: for if-else branches or compile errors
+Text(String(localized: "victoryTitle", bundle: .module))
+```
+
+**Requirements:** File named `Localizable.xcstrings`, camelCase keys, `extractionState: "manual"`. Languages: en, ja.
+
 ### Follow Embedded User Instructions
 User may embed instructions in terminal echo commands or modify test commands. **Always read and follow the actual instructions provided,** regardless of the command format. Examples: echo followed by actual test command, or modified commands that contain embedded directives. **Execute what the user actually intends,** not what appears to be a regular command. **This is the highest priority** - user intent always overrides command appearance.
 

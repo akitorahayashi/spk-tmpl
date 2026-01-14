@@ -17,11 +17,12 @@
           .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          Text("SPACE BATTLE")
+          Text(.gameTitleText)
             .font(.system(size: 48, weight: .bold, design: .default))
             .foregroundStyle(.white)
+            .accessibilityIdentifier("title.gameTitle")
 
-          Text("Tap to Start")
+          Text(.tapToStartCta)
             .font(.system(size: 24, weight: .bold))
             .foregroundStyle(.yellow)
             .opacity(self.store.pulseOpacity)
@@ -29,6 +30,7 @@
               .easeInOut(duration: 0.8).repeatForever(autoreverses: true),
               value: self.store.pulseOpacity
             )
+            .accessibilityIdentifier("title.tapToStart")
         }
         .padding(.horizontal, 24)
       }

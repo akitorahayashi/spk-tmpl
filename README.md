@@ -32,7 +32,7 @@ Assets are managed via the `SharedResources` SPM module. SwiftGen generates type
 
 ### Localization
 - Feature UI targets ship `.xcstrings` catalogs that compile through `xcstrings-tool-plugin` for type-safe accessors.
-- `Text(localizable:)` or `LocalizedStringResource(localizable:)` supplies every player-facing string, with literal `Text("...")` reserved for debugging contexts.
+- Views reference generated `LocalizedStringResource` members (for example, `Text(.homeTitle)` and `Label(.back, systemImage: ...)`) so no raw localization keys appear in SwiftUI code.
 - `en` and `ja` translations ship in each catalog so localization regressions surface during builds.
 
 ### Module Conventions

@@ -39,5 +39,5 @@ project.yml
 reference/*
 
 # Generated asset code
-!Packages/Packages/SharedResources/Sources/SharedResources/Generated/.gitkeep
-Packages/Packages/SharedResources/Sources/SharedResources/Generated/*.swift
+!**/Generated/.gitkeep
+**/Generated/*.swift

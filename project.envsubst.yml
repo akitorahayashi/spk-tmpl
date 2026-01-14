@@ -42,6 +42,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.TemplateApp
         GENERATE_INFOPLIST_FILE: "YES"
+        STRING_CATALOG_GENERATE_SYMBOLS: "YES"
       configs:
         Debug:
           ENABLE_TESTABILITY: "YES"
@@ -55,6 +56,9 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleDisplayName: TemplateApp
+        CFBundleLocalizations:
+          - en
+          - ja
         UILaunchScreen: {}
 
   TemplateAppTests:

@@ -1,0 +1,50 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "victoryTitle": {
+      "comment": "Game result screen heading when player wins.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "YOU WIN!"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "勝利！"
+          }
+        }
+      }
+    },
+    "gameOverTitle": {
+      "comment": "Game result screen heading when player loses.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GAME OVER"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ゲームオーバー"
+          }
+        }
+      }
+    },
+    "tapToContinue": {
+      "comment": "End screen/Dialog prompt to continue.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Tap to Continue" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "タップして進む" } }
+      }
+    }
+  },
+  "version": "1.0"
+}

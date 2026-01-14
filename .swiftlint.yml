@@ -46,6 +46,7 @@ disabled_rules:
   - function_body_length # Disable function body length limits
   - type_body_length # Disable type definition length limits
   - cyclomatic_complexity # Disable cyclomatic complexity limits
+  - identifier_name # Allow shared_ prefix for localized string wrappers
 
 opt_in_rules:
   - empty_count # Use isEmpty instead of count == 0
