@@ -33,7 +33,6 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "1.6.0"),
     .package(url: "https://github.com/pointfreeco/swift-perception", from: "2.0.9"),
     .package(url: "https://github.com/pointfreeco/swift-clocks", from: "1.0.0"),
-    .package(url: "https://github.com/liamnichols/xcstrings-tool-plugin", from: "0.3.0"),
   ],
   targets: [
     // MARK: - App Feature
@@ -95,8 +94,7 @@ let package = Package(
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
       path: "TitleFeature/Sources/TitleFeatureUI",
-      resources: [.process("Resources")],
-      plugins: [.plugin(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin")]
+      resources: [.process("Resources")]
     ),
     .testTarget(
       name: "TitleFeatureCoreTests",
@@ -125,8 +123,7 @@ let package = Package(
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
       path: "HomeFeature/Sources/HomeFeatureUI",
-      resources: [.process("Resources")],
-      plugins: [.plugin(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin")]
+      resources: [.process("Resources")]
     ),
     .testTarget(
       name: "HomeFeatureCoreTests",
@@ -157,8 +154,7 @@ let package = Package(
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
       ],
       path: "GameFeature/Sources/GameFeatureUI",
-      resources: [.process("Resources")],
-      plugins: [.plugin(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin")]
+      resources: [.process("Resources")]
     ),
     .testTarget(
       name: "GameFeatureCoreTests",
@@ -178,8 +174,7 @@ let package = Package(
       path: "SharedResources/Sources/SharedResources",
       resources: [
         .process("Resources"),
-      ],
-      plugins: [.plugin(name: "XCStringsToolPlugin", package: "xcstrings-tool-plugin")]
+      ]
     ),
   ]
 )

@@ -1,0 +1,40 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "copyrightNotice": {
+      "comment": "Footer copyright notice on title screen.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "© 2026 YourCompany"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "© 2026 YourCompany"
+          }
+        }
+      }
+    },
+    "gameTitleText": {
+      "comment": "Title screen masthead text.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "POWER SHOT" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "パワーショット" } }
+      }
+    },
+    "tapToStartCta": {
+      "comment": "Title view prompt that pulses to invite the player to begin.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Tap to Start" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "タップしてスタート" } }
+      }
+    }
+  },
+  "version": "1.0"
+}

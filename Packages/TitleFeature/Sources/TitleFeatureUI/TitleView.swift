@@ -1,6 +1,5 @@
 #if canImport(UIKit)
   import ComposableArchitecture
-  import SharedResources
   import SwiftUI
   import TitleFeatureCore
 
@@ -18,11 +17,11 @@
           .ignoresSafeArea()
 
         VStack(spacing: 40) {
-          Text(String(localized: .gameTitleText, bundle: .module))
+          Text(String(localized: "gameTitleText", bundle: .module))
             .font(.system(size: 48, weight: .bold, design: .default))
             .foregroundStyle(.white)
 
-          Text(String(localized: .tapToStartCta, bundle: .module))
+          Text(String(localized: "tapToStartCta", bundle: .module))
             .font(.system(size: 24, weight: .bold))
             .foregroundStyle(.yellow)
             .opacity(self.store.pulseOpacity)

@@ -1,7 +1,6 @@
 #if canImport(UIKit)
   import ComposableArchitecture
   import GameFeatureCore
-  import SharedResources
   import SwiftUI
 
   /// The ended screen view displaying the game result and return prompt.
@@ -20,13 +19,13 @@
         VStack(spacing: 40) {
           Text(
             self.store.result == .won
-              ? String(localized: .victoryTitle, bundle: .module)
-              : String(localized: .gameOverTitle, bundle: .module)
+              ? String(localized: "victoryTitle", bundle: .module)
+              : String(localized: "gameOverTitle", bundle: .module)
           )
           .font(.system(size: 48, weight: .bold, design: .default))
           .foregroundColor(self.store.result == .won ? .green : .red)
 
-          Text(String(localized: .tapToContinue, bundle: SharedResources.bundle))
+          Text(String(localized: "tapToContinue", bundle: .module))
             .font(.system(size: 24, weight: .bold))
             .foregroundColor(.white)
         }

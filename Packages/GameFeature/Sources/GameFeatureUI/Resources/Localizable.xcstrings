@@ -36,6 +36,14 @@
           }
         }
       }
+    },
+    "tapToContinue": {
+      "comment": "End screen/Dialog prompt to continue.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Tap to Continue" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "タップして進む" } }
+      }
     }
   },
   "version": "1.0"
