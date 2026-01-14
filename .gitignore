@@ -18,7 +18,6 @@ build/
 
 # Swift Package Manager
 .build/
-Package.resolved
 .swiftpm/
 
 # macOS system files

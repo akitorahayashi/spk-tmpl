@@ -20,7 +20,7 @@
           Text(.gameTitleText)
             .font(.system(size: 48, weight: .bold, design: .default))
             .foregroundStyle(.white)
-            .accessibilityIdentifier("title.gameTitle")
+            .accessibilityIdentifier(TitleAccessibilityID.gameTitle)
 
           Text(.tapToStartCta)
             .font(.system(size: 24, weight: .bold))
@@ -30,7 +30,7 @@
               .easeInOut(duration: 0.8).repeatForever(autoreverses: true),
               value: self.store.pulseOpacity
             )
-            .accessibilityIdentifier("title.tapToStart")
+            .accessibilityIdentifier(TitleAccessibilityID.tapToStart)
         }
         .padding(.horizontal, 24)
       }

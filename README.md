@@ -40,6 +40,10 @@ Each feature follows a Domain/UI split:
 - `*Core`: Reducer, state, actions, and dependencies (no SwiftUI imports)
 - `*UI`: SwiftUI views and SpriteKit scenes that bind to stores
 
+### Accessibility Identifiers
+- `TitleFeatureUI`, `HomeFeatureUI`, and `GameFeatureUI` declare `*AccessibilityID` enums under `Packages/<Feature>/Sources/<Feature>UI/AccessibilityID.swift` to centralize every identifier string.
+- SwiftUI views (Title, Home, and the Game ended screen) and `Tests/UI/TemplateAppUITests.swift` read from those enums so UI tests and views reference the same values without duplicating literals.
+
 ## Game Feature
 
 ### Gameplay Logic
