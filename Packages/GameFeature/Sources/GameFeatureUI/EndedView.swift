@@ -21,15 +21,18 @@
             Text(String(localized: "victoryTitle", bundle: .module))
               .font(.system(size: 48, weight: .bold, design: .default))
               .foregroundColor(.green)
+              .accessibilityIdentifier(GameAccessibilityID.victoryTitle)
           } else {
             Text(String(localized: "gameOverTitle", bundle: .module))
               .font(.system(size: 48, weight: .bold, design: .default))
               .foregroundColor(.red)
+              .accessibilityIdentifier(GameAccessibilityID.defeatTitle)
           }
 
           Text(String(localized: "tapToContinue", bundle: .module))
             .font(.system(size: 24, weight: .bold))
             .foregroundColor(.white)
+            .accessibilityIdentifier(GameAccessibilityID.tapToContinue)
         }
       }
       .contentShape(Rectangle())

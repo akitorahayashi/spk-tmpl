@@ -100,6 +100,10 @@ targets:
       - Tests/UI
     dependencies:
       - target: TemplateApp
+      - package: Packages
+        product: TitleFeatureUI
+      - package: Packages
+        product: HomeFeatureUI
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.TemplateAppUITests

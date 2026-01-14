@@ -20,7 +20,7 @@
           Text(.homeTitle)
             .font(.system(size: 48, weight: .bold, design: .default))
             .foregroundColor(.white)
-            .accessibilityIdentifier("home.title")
+            .accessibilityIdentifier(HomeAccessibilityID.title)
 
           Text(.startMissionButton)
             .font(.system(size: 24, weight: .bold))
@@ -30,7 +30,7 @@
               .easeInOut(duration: 0.8).repeatForever(autoreverses: true),
               value: self.store.pulseOpacity
             )
-            .accessibilityIdentifier("home.startMission")
+            .accessibilityIdentifier(HomeAccessibilityID.startMission)
         }
       }
       .contentShape(Rectangle())
