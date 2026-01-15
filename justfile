@@ -168,12 +168,12 @@ gen-pj:
 # Format code
 fix:
     @mint run swiftformat .
-    @mint run swiftlint lint --fix .
+    @mint run swiftlint lint --fix . 2>&1 | tail -5
 
 # Check code format
 check: fix
     @mint run swiftformat --lint .
-    @mint run swiftlint lint --strict
+    @mint run swiftlint lint --strict 2>&1 | tail -5
 
 # ==============================================================================
 # CLEANUP
