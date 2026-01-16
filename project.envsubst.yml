@@ -37,7 +37,16 @@ targets:
     resources:
       - path: App/Resources
     dependencies:
-      # __DEPENDENCIES__
+      # App Feature
+      - package: Packages
+        product: AppFeatureCore
+      - package: Packages
+        product: AppFeatureUI
+      # Game Feature
+      - package: Packages
+        product: GameFeatureCore
+      - package: Packages
+        product: GameFeatureUI
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.TemplateApp
@@ -61,22 +70,6 @@ targets:
           - ja
         UILaunchScreen: {}
 
-  TemplateAppTests:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - Tests/Unit
-    dependencies:
-      - target: TemplateApp
-      # __DEPENDENCIES__
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.TemplateAppTests
-        GENERATE_INFOPLIST_FILE: "YES"
-        SWIFT_ENABLE_EXPLICIT_MODULES: "NO"
-    info:
-      path: Tests/Unit/Info.plist
-
   TemplateAppIntgTests:
     type: bundle.unit-test
     platform: iOS
@@ -84,7 +77,6 @@ targets:
       - Tests/Intg
     dependencies:
       - target: TemplateApp
-      # __DEPENDENCIES__
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.akitorahayashi.TemplateAppIntgTests
@@ -123,21 +115,10 @@ schemes:
       config: Debug
       gatherCoverageData: false
       targets:
-        - TemplateAppTests
         - TemplateAppUITests
         - TemplateAppIntgTests
     archive:
       config: Release
-
-  TemplateAppTests:
-    build:
-      targets:
-        TemplateAppTests: all
-    test:
-      config: Debug
-      gatherCoverageData: false
-      targets:
-        - TemplateAppTests
 
   TemplateAppIntgTests:
     build:

@@ -77,14 +77,23 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
     - dependencies.yml is embedded into targets via # __DEPENDENCIES__ placeholder
     - just gen-pj processes templates and runs XcodeGen
 - **Testing Strategy**:
-    - **Package Tests**: SwiftPM test targets for reducer behavior validation using TCA TestStore
-    - **Unit Tests**: App-level configuration validation
-    - **Integration Tests**: Feature composition with dependency overrides
-    - **UI Tests**: Black-box testing of the application UI
+    - **Package Tests**: SwiftPM test targets for reducer behavior using TCA TestStore (mocked dependencies)
+    - **Integration Tests**: Real dependency verification (persistence round-trip, actual storage). No TCA imports.
+    - **UI Tests**: XCUITest for user journeys
+
+    Boundary principle:
+    - `pkg-test` answers: "Is the logic correct?" (mocked)
+    - `Tests/Intg` answers: "Do real implementations work?" (real storage)
+    - `Tests/UI` answers: "Does the user experience work?"
+
+- **Dependencies**:
+    - TCA and related packages are declared only in `Packages/Package.swift`
+    - `project.envsubst.yml` references only `Packages` as a local path; dependencies resolve transitively
+    - This prevents duplicate declarations and ensures consistent version resolution
 
 ## Asset Management
-- Assets in `Packages/Packages/SharedResources/Sources/SharedResources/Resources/Media.xcassets`
-- Generated code in `Packages/Packages/SharedResources/Sources/SharedResources/Generated/` (git-ignored)
+- Assets in `Packages/SharedResources/Sources/SharedResources/Resources/Media.xcassets`
+- Generated code in `Packages/SharedResources/Sources/SharedResources/Generated/` (git-ignored)
 - Use `Asset.Category.SubCategory.assetName` for type-safe access (e.g., `Asset.Scenes.Game.Player.fighterJet`)
 - Run `just gen-as` after modifying assets
 
@@ -94,7 +103,7 @@ This project is an iOS SpriteKit game template built with SwiftUI and The Compos
 - **Generate Assets**: just gen-as - Regenerates SwiftGen asset code
 - **Generate Project**: just gen-pj - Regenerates the Xcode project from templates
 - **Check**: just check - Formats code with SwiftFormat and lints with SwiftLint
-- **Test**: just test - Runs all test suites (Package, Unit, Integration, UI)
+- **Test**: just test - Runs all test suites (Package, Integration, UI)
 - **Package Test**: just pkg-test - Runs Swift package tests
 
 ## Development Guidelines

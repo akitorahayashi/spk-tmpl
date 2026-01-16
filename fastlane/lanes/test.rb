@@ -35,24 +35,6 @@ lane :build_for_testing do |options|
   end
 end
 
-desc "Run unit tests"
-lane :unit_test do |options|
-  options ||= {}
-  test_with_scheme({ scheme: SCHEMES[:unit_test], result_path: UNIT_TEST_RESULT_PATH }.merge(options))
-end
-
-desc "Run unit tests without building"
-lane :unit_test_without_building do |options|
-  options ||= {}
-  test_with_scheme(
-    {
-      scheme: SCHEMES[:unit_test],
-      result_path: UNIT_TEST_RESULT_PATH,
-      test_without_building: true,
-    }.merge(options)
-  )
-end
-
 desc "Run integration tests"
 lane :intg_test do |options|
   options ||= {}
@@ -89,11 +71,10 @@ lane :ui_test_without_building do |options|
   )
 end
 
-desc "Run all tests (Unit, UI, Intg)"
+desc "Run all tests (Intg, UI)"
 lane :test_all do |options|
   options ||= {}
   build_for_testing(options)
-  unit_test_without_building(options)
   intg_test_without_building(options)
   ui_test_without_building(options)
 end
