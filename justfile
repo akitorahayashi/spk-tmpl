@@ -144,21 +144,7 @@ gen-pj:
     #!/usr/bin/env bash
     set -e
     echo "Generating Xcode project with TEAM_ID: {{TEAM_ID}}"
-    # First, do envsubst for TEAM_ID
-    TEAM_ID={{TEAM_ID}} envsubst < project.envsubst.yml > project.yml.tmp
-    # Read dependencies and indent them for embedding (6 spaces for YAML array items under dependencies:)
-    DEPS_FILE=$(mktemp)
-    sed 's/^/      /' dependencies.yml > "$DEPS_FILE"
-    # Replace all placeholder occurrences with the dependencies content
-    awk -v depsfile="$DEPS_FILE" '
-        /# __DEPENDENCIES__/ {
-            while ((getline line < depsfile) > 0) print line
-            close(depsfile)
-            next
-        }
-        { print }
-    ' project.yml.tmp > project.yml
-    rm -f project.yml.tmp "$DEPS_FILE"
+    TEAM_ID={{TEAM_ID}} envsubst < project.envsubst.yml > project.yml
     mint run xcodegen generate
 
 # ==============================================================================
@@ -190,14 +176,8 @@ clean:
     @rm -rf {{SWIFTPM_ROOT}}
 
 # ==============================================================================
-# Test Interface (Delegated to fastlane module)
+# Testing
 # ==============================================================================
-
-# Run all tests (unit, integration, UI, and package tests)
-test:
-    @just gen
-    @just pkg-test
-    @just fastlane::test-all
 
 # Usage: just pkg-test [filter] [ci] [extra_args]
 # filter: Optional regex to filter tests (e.g., "GameFeatureCoreTests")
@@ -240,13 +220,11 @@ pkg-test filter="" ci="false" *extra_args:
                "${ARGS_ARRAY[@]}"
     echo "✅ Tests complete."
 
-# Run unit tests
-unit-test:
-    @just fastlane::unit-test
-
-# Run unit tests without building
-unit-test-without-building:
-    @just fastlane::unit-test-without-building
+# Run all tests (package + Xcode)
+test:
+    @just gen
+    @just pkg-test
+    @just fastlane::test-all
 
 # Run integration tests
 intg-test:
