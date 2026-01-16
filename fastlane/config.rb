@@ -17,7 +17,7 @@ SCHEMES = {
 }.freeze
 
 # === Test Paths ===
-BUILD_PATH = File.join(REPO_ROOT, "fastlane/build/") 
+BUILD_PATH = File.join(REPO_ROOT, "fastlane/build") 
 LOGS_PATH = File.join(REPO_ROOT, "fastlane/logs")
 TEST_LOGS_PATH = "#{LOGS_PATH}/test"
 BUILD_LOGS_PATH = "#{LOGS_PATH}/build"
