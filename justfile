@@ -2,24 +2,28 @@
 # justfile for TemplateApp automation
 # ==============================================================================
 
-set dotenv-load
+set dotenv-load := true
 
 # --- PROJECT SETTINGS ---
+
 PROJECT_FILE := "TemplateApp.xcodeproj"
 APP_BUNDLE_ID := "com.akitorahayashi.TemplateApp"
 
 # --- PROJECT SPECIFIC PATHS ---
+
 HOME_DIR := env("HOME")
 TEST_DERIVED_DATA_PATH := "fastlane/build/test-results/DerivedData"
 DEBUG_APP_PATH := TEST_DERIVED_DATA_PATH + "/Debug/Build/Products/Debug-iphonesimulator/TemplateApp.app"
 RELEASE_APP_PATH := TEST_DERIVED_DATA_PATH + "/Release/Build/Products/Release-iphonesimulator/TemplateApp.app"
 
 # --- SWIFT PACKAGE OPTIONS ---
+
 SWIFTPM_ROOT := env("SWIFTPM_ROOT", HOME_DIR + "/.cache/swiftpm/spk-tmpl")
 SWIFTPM_DEP_CACHE := SWIFTPM_ROOT + "/dependencies"
 SWIFTPM_ARTIFACT_ROOT := SWIFTPM_ROOT + "/artifacts"
 
 # --- ENVIRONMENT VARIABLES ---
+
 TEAM_ID := env("TEAM_ID", "")
 DEV_SIMULATOR_UDID := env("DEV_SIMULATOR_UDID", "")
 TEST_SIMULATOR_UDID := env("TEST_SIMULATOR_UDID", "")
@@ -27,6 +31,7 @@ TEST_SIMULATOR_UDID := env("TEST_SIMULATOR_UDID", "")
 # ==============================================================================
 # Modules
 # ==============================================================================
+
 # Load implementations under the fastlane directory as a module named 'fastlane'
 mod fastlane "fastlane/just/main.just"
 
@@ -66,13 +71,13 @@ setup:
 resolve-packages cache_path=SWIFTPM_DEP_CACHE:
     #!/usr/bin/env bash
     set -e
-    echo "Using dependency cache at: {{cache_path}}"
-    mkdir -p "{{cache_path}}"
+    echo "Using dependency cache at: {{ cache_path }}"
+    mkdir -p "{{ cache_path }}"
     echo "🔄 Resolving dependencies for Packages..."
-    swift package resolve --package-path Packages --cache-path "{{cache_path}}"
+    swift package resolve --package-path Packages --cache-path "{{ cache_path }}"
     echo "✅ Package resolution complete."
     echo "Resolving Xcode project dependencies..."
-    xcodebuild -resolvePackageDependencies -project {{PROJECT_FILE}}
+    xcodebuild -resolvePackageDependencies -project {{ PROJECT_FILE }}
     echo "✅ Xcode dependencies resolved."
 
 # Reset SwiftPM cache, dependencies, and build artifacts
@@ -80,7 +85,7 @@ resolve-pkg:
     @echo "Removing SwiftPM build and cache..."
     @rm -rf .build
     @rm -rf Packages/.build
-    @rm -rf {{SWIFTPM_ROOT}}
+    @rm -rf {{ SWIFTPM_ROOT }}
     @echo "✅ SwiftPM build and cache removed."
     @echo "Resolving Swift package dependencies..."
     @just resolve-packages
@@ -88,7 +93,7 @@ resolve-pkg:
 
 # Open project in Xcode
 open:
-    @xed {{PROJECT_FILE}}
+    @xed {{ PROJECT_FILE }}
 
 # ==============================================================================
 # Local Simulator
@@ -96,30 +101,30 @@ open:
 
 # Boot local simulator
 boot:
-    @if [ -z "{{DEV_SIMULATOR_UDID}}" ]; then \
+    @if [ -z "{{ DEV_SIMULATOR_UDID }}" ]; then \
         echo "DEV_SIMULATOR_UDID is not set. Please set it in your .env"; \
         exit 1; \
     fi
-    @echo "Booting development simulator: UDID: {{DEV_SIMULATOR_UDID}}"
-    @if xcrun simctl list devices | grep -q "{{DEV_SIMULATOR_UDID}} (Booted)"; then \
+    @echo "Booting development simulator: UDID: {{ DEV_SIMULATOR_UDID }}"
+    @if xcrun simctl list devices | grep -q "{{ DEV_SIMULATOR_UDID }} (Booted)"; then \
         echo "⚡️ Simulator is already booted."; \
     else \
-        xcrun simctl boot {{DEV_SIMULATOR_UDID}}; \
+        xcrun simctl boot {{ DEV_SIMULATOR_UDID }}; \
         echo "✅ Simulator booted."; \
     fi
     @open -a Simulator
 
 # Boot test simulator
 boot-test:
-    @if [ -z "{{TEST_SIMULATOR_UDID}}" ]; then \
+    @if [ -z "{{ TEST_SIMULATOR_UDID }}" ]; then \
         echo "TEST_SIMULATOR_UDID is not set. Please set it in your .env"; \
         exit 1; \
     fi
-    @echo "Booting test simulator: UDID: {{TEST_SIMULATOR_UDID}}"
-    @if xcrun simctl list devices | grep -q "{{TEST_SIMULATOR_UDID}} (Booted)"; then \
+    @echo "Booting test simulator: UDID: {{ TEST_SIMULATOR_UDID }}"
+    @if xcrun simctl list devices | grep -q "{{ TEST_SIMULATOR_UDID }} (Booted)"; then \
         echo "⚡️ Simulator is already booted."; \
     else \
-        xcrun simctl boot {{TEST_SIMULATOR_UDID}}; \
+        xcrun simctl boot {{ TEST_SIMULATOR_UDID }}; \
         echo "✅ Simulator booted."; \
     fi
     @open -a Simulator
@@ -143,8 +148,8 @@ gen-as:
 gen-pj:
     #!/usr/bin/env bash
     set -e
-    echo "Generating Xcode project with TEAM_ID: {{TEAM_ID}}"
-    TEAM_ID={{TEAM_ID}} envsubst < project.envsubst.yml > project.yml
+    echo "Generating Xcode project with TEAM_ID: {{ TEAM_ID }}"
+    TEAM_ID={{ TEAM_ID }} envsubst < project.envsubst.yml > project.yml
     mint run xcodegen generate
 
 # ==============================================================================
@@ -153,11 +158,15 @@ gen-pj:
 
 # Format code
 fix:
+    @just --fmt --unstable
+    @find fastlane/just -name "*.just" -exec just --fmt --unstable --justfile {} \;
     @mint run swiftformat .
     @mint run swiftlint lint --fix . 2>&1 | tail -5
 
 # Check code format
 check: fix
+    @just --fmt --check --unstable
+    @find fastlane/just -name "*.just" -exec just --fmt --check --unstable --justfile {} \;
     @mint run swiftformat --lint .
     @mint run swiftlint lint --strict 2>&1 | tail -5
 
@@ -167,43 +176,43 @@ check: fix
 
 # Clean build artifacts, caches, and generated files
 clean:
-    @rm -rf {{PROJECT_FILE}}
+    @rm -rf {{ PROJECT_FILE }}
     @rm -rf fastlane/build
     @rm -rf fastlane/logs
     @rm -rf fastlane/report.xml
     @rm -rf .build
     @rm -rf Packages/.build
-    @rm -rf {{SWIFTPM_ROOT}}
+    @rm -rf {{ SWIFTPM_ROOT }}
 
 # ==============================================================================
 # Testing
 # ==============================================================================
-
 # Usage: just pkg-test [filter] [ci] [extra_args]
 # filter: Optional regex to filter tests (e.g., "GameFeatureCoreTests")
 # ci: Optional CI mode flag ("true" limits workers to 1)
+
 # extra_args: Additional arguments passed to swift test (e.g. "--skip-build")
 pkg-test filter="" ci="false" *extra_args:
     #!/usr/bin/env bash
     set -e
-    mkdir -p {{SWIFTPM_DEP_CACHE}}
-    mkdir -p {{SWIFTPM_ARTIFACT_ROOT}}
+    mkdir -p {{ SWIFTPM_DEP_CACHE }}
+    mkdir -p {{ SWIFTPM_ARTIFACT_ROOT }}
     echo "🧪 Testing Packages..."
-    
+
     ARGS_ARRAY=()
-    for arg in {{extra_args}}; do
+    for arg in {{ extra_args }}; do
         ARGS_ARRAY+=("$arg")
     done
-    
-    if [ -n "{{filter}}" ];
+
+    if [ -n "{{ filter }}" ];
     then
-        ARGS_ARRAY+=(--filter "{{filter}}")
-        echo "📋 Filtering tests with: {{filter}}"
+        ARGS_ARRAY+=(--filter "{{ filter }}")
+        echo "📋 Filtering tests with: {{ filter }}"
     else
         echo "📋 Running all tests"
     fi
-    
-    if [ "{{ci}}" = "true" ];
+
+    if [ "{{ ci }}" = "true" ];
     then
         echo "🔧 CI Mode: Running with 1 worker to save resources..."
         ARGS_ARRAY+=(--parallel --num-workers 1)
@@ -212,11 +221,11 @@ pkg-test filter="" ci="false" *extra_args:
         WORKERS=$(sysctl -n hw.ncpu)
         ARGS_ARRAY+=(--parallel --num-workers "$WORKERS")
     fi
-    
+
     echo "Running: swift test ${ARGS_ARRAY[@]}"
     swift test --package-path Packages \
-               --cache-path "{{SWIFTPM_DEP_CACHE}}" \
-               --scratch-path "{{SWIFTPM_ARTIFACT_ROOT}}/Packages" \
+               --cache-path "{{ SWIFTPM_DEP_CACHE }}" \
+               --scratch-path "{{ SWIFTPM_ARTIFACT_ROOT }}/Packages" \
                "${ARGS_ARRAY[@]}"
     echo "✅ Tests complete."
 

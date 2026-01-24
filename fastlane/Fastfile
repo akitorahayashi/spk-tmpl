@@ -8,15 +8,15 @@ require "fileutils"
 require_relative "config"
 
 before_all do
-  ENV["FL_BUILDLOG_PATH"] = LOGS_PATH
+  ENV["FL_BUILDLOG_PATH"] = LOGS_ROOT
   ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "20"
 
   [
-    BUILD_PATH,
-    LOGS_PATH,
+    BUILD_ROOT,
+    LOGS_ROOT,
     TEST_LOGS_PATH,
     BUILD_LOGS_PATH,
-    TEST_RESULTS_PATH,
+    TEST_RESULTS_DIR,
   ].each { |path| FileUtils.mkdir_p(path) }
 end
 
