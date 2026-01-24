@@ -25,8 +25,8 @@ end
 
 private_lane :sign_archive do |options|
   export_base = case options[:configuration]
-                when CONFIGURATIONS[:release] then RELEASE_EXPORT_BASE
-                when CONFIGURATIONS[:debug] then DEBUG_EXPORT_BASE
+                when CONFIGURATIONS[:release] then RELEASE_BUILD_DIR
+                when CONFIGURATIONS[:debug] then DEBUG_BUILD_DIR
                 else
                   UI.user_error!("Unknown configuration: #{options[:configuration]}")
                 end
