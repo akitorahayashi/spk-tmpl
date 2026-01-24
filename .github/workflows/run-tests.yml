@@ -4,11 +4,15 @@ on:
   workflow_call:
 
 jobs:
-  build-test:
+  test:
     runs-on: macos-15
     permissions:
       contents: read
     timeout-minutes: 40
+    strategy:
+      matrix:
+        test_target: [intg, ui]
+      fail-fast: false
     env:
       MINT_PATH: ${{ github.workspace }}/.mint
     steps:
@@ -23,89 +27,13 @@ jobs:
           generate_code: true
           setup_ruby: true
 
-      - name: Build for Testing
-        run: just build-test
+      - name: Run Tests
+        run: just ${{ matrix.test_target }}-test
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: built-products
-          path: |
-            ${{ github.workspace }}/fastlane/build/test-results/DerivedData/Debug/Build/Products/
-          retention-days: 1
-
-  intg-test:
-    runs-on: macos-15
-    permissions:
-      contents: read
-    timeout-minutes: 40
-    needs: build-test
-    env:
-      MINT_PATH: ${{ github.workspace }}/.mint
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Setup environment
-        uses: ./.github/actions/setup
-        with:
-          setup_xcode: true
-          generate_code: true
-          setup_ruby: true
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: built-products
-          path: ${{ github.workspace }}/fastlane/build/test-results/DerivedData/Debug/Build/Products/
-
-      - name: Run Integration Tests
-        id: intg_tests
-        run: just intg-test-without-building
-
-      - name: Upload Integration Test Results
+      - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: intg-test-results
-          path: ${{ github.workspace }}/fastlane/build/test-results/intg/TestResults.xcresult
-          retention-days: 3
-
-  ui-test:
-    runs-on: macos-15
-    permissions:
-      contents: read
-    timeout-minutes: 40
-    needs: build-test
-    env:
-      MINT_PATH: ${{ github.workspace }}/.mint
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Setup environment
-        uses: ./.github/actions/setup
-        with:
-          setup_xcode: true
-          generate_code: true
-          setup_ruby: true
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: built-products
-          path: ${{ github.workspace }}/fastlane/build/test-results/DerivedData/Debug/Build/Products/
-
-      - name: Run UI Tests
-        id: ui_tests
-        run: just ui-test-without-building
-
-      - name: Upload UI Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ui-test-results
-          path: ${{ github.workspace }}/fastlane/build/test-results/ui/TestResults.xcresult
+          name: ${{ matrix.test_target }}-test-results
+          path: ${{ github.workspace }}/fastlane/build/test-results/${{ matrix.test_target }}/TestResults.xcresult
           retention-days: 3
