@@ -1,11 +1,14 @@
 # fastlane/config.rb
 # Fastlane configuration values
 
+# === App Constants ===
+APP_NAME = "TemplateApp"
+
 # === Project Structure ===
 # This file is at <project>/fastlane/config.rb
 FASTLANE_DIR = __dir__
 PROJECT_ROOT = File.expand_path('..', FASTLANE_DIR)
-PROJECT_PATH = File.join(PROJECT_ROOT, "TemplateApp.xcodeproj")
+PROJECT_PATH = File.join(PROJECT_ROOT, "#{APP_NAME}.xcodeproj")
 
 # === Scheme Constants ===
 SCHEMES = {
@@ -13,9 +16,6 @@ SCHEMES = {
   ui_test: "TemplateAppUITests",
   intg_test: "TemplateAppIntgTests"
 }.freeze
-
-# === App Constants ===
-APP_NAME = "TemplateApp"
 
 # === Configurations ===
 CONFIGURATIONS = {
